@@ -1,4 +1,6 @@
 using MealMind.Api.Service;
+using Microsoft.EntityFrameworkCore;
+using MealMind.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,9 @@ builder.Services.AddSwaggerGen();
 
 //registering service for dependency injection
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+//the pantry lives at mealmind.db, and it's a SQLite pantry
+builder.Services.AddDbContext<MealMindDBContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 var app = builder.Build();
 
