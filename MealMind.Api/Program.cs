@@ -1,8 +1,13 @@
+using MealMind.Api.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//registering service for dependency injection
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 var app = builder.Build();
 
