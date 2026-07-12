@@ -1,6 +1,6 @@
-using MealMind.Api.Service;
 using Microsoft.EntityFrameworkCore;
 using MealMind.Api.Data;
+using MealMind.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
