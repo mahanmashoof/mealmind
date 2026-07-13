@@ -49,4 +49,24 @@ public class RecipesController : ControllerBase
         var success = await _recipeService.DeleteAsync(id);
         return success ? NoContent() : NotFound();
     }
+
+    [HttpPost("{id}/image")]
+    public async Task<IActionResult> UploadImage(int id, IFormFile file)
+    {
+        var recipe = await _recipeService.GetByIdAsync(id);
+        if (recipe is null) return NotFound();
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine("wwwroot/uploads", fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        recipe.ImageUrl = $"/uploads/{fileName}";
+        await _recipeService.UpdateAsync(id, recipe);
+
+        return Ok(new { imageUrl = recipe.ImageUrl });
+    }
 }
