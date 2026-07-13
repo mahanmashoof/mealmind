@@ -2,6 +2,7 @@
 using MealMind.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MealMind.Api.Migrations
 {
     [DbContext(typeof(MealMindDBContext))]
-    partial class MealMindDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260713134830_AddNutritionInfo")]
+    partial class AddNutritionInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
@@ -36,7 +39,7 @@ namespace MealMind.Api.Migrations
 
             modelBuilder.Entity("MealMind.Api.Models.Recipe", b =>
                 {
-                    b.OwnsOne("MealMind.Api.Models.NutritionInfo", "Nutrition", b1 =>
+                    b.OwnsOne("MealMind.Api.Models.NutritionInfo", "NutritionInfo", b1 =>
                         {
                             b1.Property<int>("RecipeId")
                                 .HasColumnType("INTEGER");
@@ -61,7 +64,7 @@ namespace MealMind.Api.Migrations
                                 .HasForeignKey("RecipeId");
                         });
 
-                    b.Navigation("Nutrition");
+                    b.Navigation("NutritionInfo");
                 });
 #pragma warning restore 612, 618
         }
