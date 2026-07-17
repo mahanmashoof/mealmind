@@ -11,5 +11,6 @@ namespace MealMind.Api.Models
         public string Name { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
         public NutritionInfo? Nutrition { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }
