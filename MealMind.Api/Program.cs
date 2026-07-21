@@ -61,6 +61,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddHttpClient<IAiClient, OpenAiClient>();
+builder.Services.AddScoped<IWeeklyPlanService, WeeklyPlanService>();
 
 var app = builder.Build();
 
