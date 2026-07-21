@@ -19,6 +19,12 @@ namespace MealMind.Api.Data
             v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
             v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new List<string>()
         );
+            modelBuilder.Entity<WeeklyPlan>()
+        .HasMany(p => p.Entries)
+        .WithOne(e => e.WeeklyPlan)
+        .HasForeignKey(e => e.WeeklyPlanId);
         }
+        public DbSet<WeeklyPlan> WeeklyPlans => Set<WeeklyPlan>();
+        public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
     }
 }
