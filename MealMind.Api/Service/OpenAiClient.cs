@@ -31,6 +31,22 @@ public class OpenAiClient : IAiClient
         return result?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty;
     }
 
+    public async Task<string> GetJsonCompletionAsync(string prompt)
+    {
+        var request = new
+        {
+            model = "gpt-4o-mini",
+            messages = new[] { new { role = "user", content = prompt } },
+            response_format = new { type = "json_object" }
+        };
+
+        var response = await _httpClient.PostAsJsonAsync("chat/completions", request);
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<OpenAiResponse>();
+        return result?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty;
+    }
+
     private class OpenAiResponse
     {
         [JsonPropertyName("choices")]

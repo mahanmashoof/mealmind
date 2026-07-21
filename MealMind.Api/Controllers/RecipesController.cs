@@ -77,4 +77,11 @@ public class RecipesController : ControllerBase
 
         return Ok(new { imageUrl = recipe.ImageUrl });
     }
+
+    [HttpPost("ai-generate")]
+    public async Task<IActionResult> CreateFromAi([FromBody] string prompt)
+    {
+        var recipe = await _recipeService.CreateFromAiAsync(prompt, CurrentUserId);
+        return CreatedAtAction(nameof(GetById), new { id = recipe.Id }, recipe);
+    }
 }
