@@ -13,6 +13,12 @@ namespace MealMind.Api.Data
             base.OnModelCreating(modelBuilder); // required for Identity's own tables
             //store NutritionInfo's fields as extra columns on the Recipes table itself rather than creating a whole new table with its own foreign key
             modelBuilder.Entity<Recipe>().OwnsOne(r => r.Nutrition);
+            modelBuilder.Entity<Recipe>()
+        .Property(r => r.Steps)
+        .HasConversion(
+            v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+            v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new List<string>()
+        );
         }
     }
 }
