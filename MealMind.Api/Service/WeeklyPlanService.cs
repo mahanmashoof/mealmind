@@ -12,7 +12,7 @@ public interface IWeeklyPlanService
     Task<WeeklyPlan?> GetByIdAsync(int id);
     Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId);
     Task<PlanOpResult> DeleteAsync(int id, string userId);
-    Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, int recipeId, string userId);
+    Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, string userId);
     Task<PlanOpResult> RemoveEntryAsync(int planId, int entryId, string userId);
 }
 
@@ -47,27 +47,35 @@ public class WeeklyPlanService : IWeeklyPlanService
         return PlanOpResult.Success;
     }
 
-    public async Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, int recipeId, string userId)
+    public async Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, string userId)
     {
-        var plan = await _context.WeeklyPlans.Include(p => p.Entries)
+        var plan = await _context.WeeklyPlans
+            .Include(p => p.Entries)
             .FirstOrDefaultAsync(p => p.Id == planId)
             ?? throw new KeyNotFoundException("Plan not found");
+
         if (plan.UserId != userId)
             throw new UnauthorizedAccessException("Not your plan");
 
-        // Recipes are shared now — only need to confirm it exists, not who owns it
         var recipeExists = await _context.Recipes.AnyAsync(r => r.Id == recipeId);
         if (!recipeExists)
             throw new KeyNotFoundException("Recipe not found");
 
-        var existingEntry = plan.Entries.FirstOrDefault(e => e.Day == day);
+        var existingEntry = plan.Entries.FirstOrDefault(e => e.Day == day && e.Slot == slot);
+
         if (existingEntry is not null)
         {
             existingEntry.RecipeId = recipeId;
         }
         else
         {
-            existingEntry = new MealPlanEntry { WeeklyPlanId = planId, Day = day, RecipeId = recipeId };
+            existingEntry = new MealPlanEntry
+            {
+                WeeklyPlanId = planId,
+                Day = day,
+                Slot = slot,
+                RecipeId = recipeId
+            };
             _context.MealPlanEntries.Add(existingEntry);
         }
 

@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using MealMind.Api.Services;
+using MealMind.Api.Models;
 
 namespace MealMind.Api.Controllers;
 
 public record CreatePlanRequest(DateOnly WeekStartDate);
-public record AssignRecipeRequest(DayOfWeek Day, int RecipeId);
+public record AssignRecipeRequest(DayOfWeek Day, MealSlot Slot, int RecipeId);
 
 [ApiController]
 [Route("api/[controller]")]
@@ -62,7 +63,7 @@ public class WeeklyPlansController : ControllerBase
     {
         try
         {
-            var entry = await _planService.AssignRecipeAsync(planId, request.Day, request.RecipeId, CurrentUserId);
+            var entry = await _planService.AssignRecipeAsync(planId, request.Day, request.Slot, request.RecipeId, CurrentUserId);
             return Ok(entry);
         }
         catch (UnauthorizedAccessException)
