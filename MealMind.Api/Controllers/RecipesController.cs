@@ -26,14 +26,14 @@ public class RecipesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var recipes = await _recipeService.GetAllAsync(CurrentUserId);
+        var recipes = await _recipeService.GetAllAsync();
         return Ok(recipes);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var recipe = await _recipeService.GetByIdAsync(id, CurrentUserId);
+        var recipe = await _recipeService.GetByIdAsync(id);
         return recipe is null ? NotFound() : Ok(recipe);
     }
 
@@ -47,22 +47,33 @@ public class RecipesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Recipe recipe)
     {
-        var success = await _recipeService.UpdateAsync(id, recipe, CurrentUserId);
-        return success ? NoContent() : NotFound();
+        var result = await _recipeService.UpdateAsync(id, recipe, CurrentUserId);
+        return result switch
+        {
+            RecipeOpResult.Success => NoContent(),
+            RecipeOpResult.Forbidden => Forbid(),
+            _ => NotFound()
+        };
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var success = await _recipeService.DeleteAsync(id, CurrentUserId);
-        return success ? NoContent() : NotFound();
+        var result = await _recipeService.DeleteAsync(id, CurrentUserId);
+        return result switch
+        {
+            RecipeOpResult.Success => NoContent(),
+            RecipeOpResult.Forbidden => Forbid(),
+            _ => NotFound()
+        };
     }
 
     [HttpPost("{id}/image")]
     public async Task<IActionResult> UploadImage(int id, IFormFile file)
     {
-        var recipe = await _recipeService.GetByIdAsync(id, CurrentUserId);
+        var recipe = await _recipeService.GetByIdAsync(id);
         if (recipe is null) return NotFound();
+        if (recipe.UserId != CurrentUserId) return Forbid();
 
         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
         var filePath = Path.Combine("wwwroot/uploads", fileName);

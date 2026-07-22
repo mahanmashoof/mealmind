@@ -4,33 +4,29 @@ using MealMind.Api.Models;
 
 namespace MealMind.Api.Services;
 
+public enum PlanOpResult { Success, NotFound, Forbidden }
+
 public interface IWeeklyPlanService
 {
-    Task<IEnumerable<WeeklyPlan>> GetAllAsync(string userId);
-    Task<WeeklyPlan?> GetByIdAsync(int id, string userId);
+    Task<IEnumerable<WeeklyPlan>> GetAllAsync();
+    Task<WeeklyPlan?> GetByIdAsync(int id);
     Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId);
-    Task<bool> DeleteAsync(int id, string userId);
+    Task<PlanOpResult> DeleteAsync(int id, string userId);
+    Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, int recipeId, string userId);
+    Task<PlanOpResult> RemoveEntryAsync(int planId, int entryId, string userId);
 }
 
 public class WeeklyPlanService : IWeeklyPlanService
 {
     private readonly MealMindDBContext _context;
 
-    public WeeklyPlanService(MealMindDBContext context)
-    {
-        _context = context;
-    }
+    public WeeklyPlanService(MealMindDBContext context) => _context = context;
 
-    public async Task<IEnumerable<WeeklyPlan>> GetAllAsync(string userId) =>
-        await _context.WeeklyPlans
-            .Include(p => p.Entries)
-            .Where(p => p.UserId == userId)
-            .ToListAsync();
+    public async Task<IEnumerable<WeeklyPlan>> GetAllAsync() =>
+        await _context.WeeklyPlans.Include(p => p.Entries).ToListAsync();
 
-    public async Task<WeeklyPlan?> GetByIdAsync(int id, string userId) =>
-        await _context.WeeklyPlans
-            .Include(p => p.Entries)
-            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+    public async Task<WeeklyPlan?> GetByIdAsync(int id) =>
+        await _context.WeeklyPlans.Include(p => p.Entries).FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId)
     {
@@ -40,13 +36,57 @@ public class WeeklyPlanService : IWeeklyPlanService
         return plan;
     }
 
-    public async Task<bool> DeleteAsync(int id, string userId)
+    public async Task<PlanOpResult> DeleteAsync(int id, string userId)
     {
-        var existing = await _context.WeeklyPlans.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
-        if (existing is null) return false;
+        var existing = await _context.WeeklyPlans.FindAsync(id);
+        if (existing is null) return PlanOpResult.NotFound;
+        if (existing.UserId != userId) return PlanOpResult.Forbidden;
 
         _context.WeeklyPlans.Remove(existing);
         await _context.SaveChangesAsync();
-        return true;
+        return PlanOpResult.Success;
+    }
+
+    public async Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, int recipeId, string userId)
+    {
+        var plan = await _context.WeeklyPlans.Include(p => p.Entries)
+            .FirstOrDefaultAsync(p => p.Id == planId)
+            ?? throw new KeyNotFoundException("Plan not found");
+        if (plan.UserId != userId)
+            throw new UnauthorizedAccessException("Not your plan");
+
+        // Recipes are shared now — only need to confirm it exists, not who owns it
+        var recipeExists = await _context.Recipes.AnyAsync(r => r.Id == recipeId);
+        if (!recipeExists)
+            throw new KeyNotFoundException("Recipe not found");
+
+        var existingEntry = plan.Entries.FirstOrDefault(e => e.Day == day);
+        if (existingEntry is not null)
+        {
+            existingEntry.RecipeId = recipeId;
+        }
+        else
+        {
+            existingEntry = new MealPlanEntry { WeeklyPlanId = planId, Day = day, RecipeId = recipeId };
+            _context.MealPlanEntries.Add(existingEntry);
+        }
+
+        await _context.SaveChangesAsync();
+        return existingEntry;
+    }
+
+    public async Task<PlanOpResult> RemoveEntryAsync(int planId, int entryId, string userId)
+    {
+        var plan = await _context.WeeklyPlans.FindAsync(planId);
+        if (plan is null) return PlanOpResult.NotFound;
+        if (plan.UserId != userId) return PlanOpResult.Forbidden;
+
+        var entry = await _context.MealPlanEntries
+            .FirstOrDefaultAsync(e => e.Id == entryId && e.WeeklyPlanId == planId);
+        if (entry is null) return PlanOpResult.NotFound;
+
+        _context.MealPlanEntries.Remove(entry);
+        await _context.SaveChangesAsync();
+        return PlanOpResult.Success;
     }
 }
