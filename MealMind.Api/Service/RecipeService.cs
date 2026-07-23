@@ -52,6 +52,8 @@ public class RecipeService : IRecipeService
         existing.Nutrition = updated.Nutrition;
         existing.Steps = updated.Steps;
         existing.ImageUrl = updated.ImageUrl;
+        existing.Portions = updated.Portions;
+        existing.Ingredients = updated.Ingredients;
         await _context.SaveChangesAsync();
         return RecipeOpResult.Success;
     }
@@ -69,19 +71,35 @@ public class RecipeService : IRecipeService
 
     public async Task<Recipe> CreateFromAiAsync(string userPrompt, string userId)
     {
-        // unchanged from Chapter 12
-        var systemPrompt = $$$"""
-            Create a recipe based on: "{{{userPrompt}}}".
-            Respond ONLY with JSON matching this exact shape:
-            {"name": "string", "steps": ["string"], "nutrition": {"calories": 0, "proteinGrams": 0, "carbsGrams": 0, "fatGrams": 0}}
-            """;
+        var schemaExample = new
+        {
+            name = "string",
+            portions = 0,
+            ingredients = new[] { new { name = "string", quantity = 0.0, unit = "string" } },
+            steps = new[] { "string" },
+            nutrition = new { calories = 0, proteinGrams = 0, carbsGrams = 0, fatGrams = 0 }
+        };
+        var schemaJson = System.Text.Json.JsonSerializer.Serialize(schemaExample);
+
+        var systemPrompt =
+            $"Create a recipe based on: \"{userPrompt}\". " +
+            $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
 
         var json = await _aiClient.GetJsonCompletionAsync(systemPrompt);
         var draft = System.Text.Json.JsonSerializer.Deserialize<AiRecipeDraft>(json,
             new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidOperationException("AI returned invalid recipe data");
 
-        var recipe = new Recipe { Name = draft.Name, Steps = draft.Steps, Nutrition = draft.Nutrition, UserId = userId };
+        var recipe = new Recipe
+        {
+            Name = draft.Name,
+            Portions = draft.Portions,
+            Ingredients = draft.Ingredients,
+            Steps = draft.Steps,
+            Nutrition = draft.Nutrition,
+            UserId = userId
+        };
+
         _context.Recipes.Add(recipe);
         await _context.SaveChangesAsync();
         return recipe;
