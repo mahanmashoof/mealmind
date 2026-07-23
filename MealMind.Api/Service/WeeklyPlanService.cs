@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MealMind.Api.Data;
 using MealMind.Api.Models;
+using MealMind.Api.Service;
 
 namespace MealMind.Api.Services;
 
@@ -14,13 +15,57 @@ public interface IWeeklyPlanService
     Task<PlanOpResult> DeleteAsync(int id, string userId);
     Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, string userId);
     Task<PlanOpResult> RemoveEntryAsync(int planId, int entryId, string userId);
+    Task<PrepPlanDraft> GeneratePrepPlanAsync(int planId, string userId);
 }
 
 public class WeeklyPlanService : IWeeklyPlanService
 {
     private readonly MealMindDBContext _context;
 
-    public WeeklyPlanService(MealMindDBContext context) => _context = context;
+    private readonly IAiClient _aiClient;
+
+    public WeeklyPlanService(MealMindDBContext context, IAiClient aiClient)
+    {
+        _context = context;
+        _aiClient = aiClient;
+    }
+
+    public async Task<PrepPlanDraft> GeneratePrepPlanAsync(int planId, string userId)
+    {
+        var plan = await _context.WeeklyPlans
+            .Include(p => p.Entries)
+            .ThenInclude(e => e.Recipe)
+            .FirstOrDefaultAsync(p => p.Id == planId)
+            ?? throw new KeyNotFoundException("Plan not found");
+
+        if (plan.UserId != userId)
+            throw new UnauthorizedAccessException("Not your plan");
+
+        if (plan.Entries.Count == 0)
+            throw new InvalidOperationException("Plan has no meals assigned yet");
+
+        var mealSummaries = plan.Entries
+            .Where(e => e.Recipe is not null)
+            .Select(e => $"- {e.Day} {e.Slot}: {e.Recipe!.Name} — steps: {string.Join("; ", e.Recipe.Steps)}");
+
+        var mealList = string.Join("\n", mealSummaries);
+
+        var schemaExample = new { tasks = new[] { "string" } };
+        var schemaJson = System.Text.Json.JsonSerializer.Serialize(schemaExample);
+
+        var prompt =
+            $"Here are the meals planned for the week:\n{mealList}\n\n" +
+            "Group and optimize the prep work across all these meals into a batch-prep task list " +
+            "(e.g. combine chopping the same vegetable across recipes, batch-cook shared ingredients). " +
+            $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
+
+        var json = await _aiClient.GetJsonCompletionAsync(prompt);
+        var draft = System.Text.Json.JsonSerializer.Deserialize<PrepPlanDraft>(json,
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+            ?? throw new InvalidOperationException("AI returned invalid prep plan data");
+
+        return draft;
+    }
 
     public async Task<IEnumerable<WeeklyPlan>> GetAllAsync() =>
         await _context.WeeklyPlans.Include(p => p.Entries).ToListAsync();

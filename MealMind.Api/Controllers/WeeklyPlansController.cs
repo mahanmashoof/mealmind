@@ -87,4 +87,26 @@ public class WeeklyPlansController : ControllerBase
             _ => NotFound()
         };
     }
+
+    [HttpGet("{planId}/prep-plan")]
+    public async Task<IActionResult> GetPrepPlan(int planId)
+    {
+        try
+        {
+            var prepPlan = await _planService.GeneratePrepPlanAsync(planId, CurrentUserId);
+            return Ok(prepPlan);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 }
