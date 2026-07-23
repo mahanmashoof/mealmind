@@ -13,16 +13,22 @@ namespace MealMind.Api.Data
             base.OnModelCreating(modelBuilder); // required for Identity's own tables
             //store NutritionInfo's fields as extra columns on the Recipes table itself rather than creating a whole new table with its own foreign key
             modelBuilder.Entity<Recipe>().OwnsOne(r => r.Nutrition);
+            modelBuilder.Entity<Recipe>().OwnsMany(r => r.Ingredients, i =>
+            {
+                i.WithOwner().HasForeignKey("RecipeId");
+                i.Property<int>("Id");
+                i.HasKey("Id");
+            });
             modelBuilder.Entity<Recipe>()
-        .Property(r => r.Steps)
-        .HasConversion(
-            v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
-            v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new List<string>()
-        );
+            .Property(r => r.Steps)
+            .HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new List<string>()
+            );
             modelBuilder.Entity<WeeklyPlan>()
-        .HasMany(p => p.Entries)
-        .WithOne(e => e.WeeklyPlan)
-        .HasForeignKey(e => e.WeeklyPlanId);
+            .HasMany(p => p.Entries)
+            .WithOne(e => e.WeeklyPlan)
+            .HasForeignKey(e => e.WeeklyPlanId);
         }
         public DbSet<WeeklyPlan> WeeklyPlans => Set<WeeklyPlan>();
         public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
