@@ -32,5 +32,6 @@ namespace MealMind.Api.Data
         }
         public DbSet<WeeklyPlan> WeeklyPlans => Set<WeeklyPlan>();
         public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
+        public DbSet<Reminder> Reminders => Set<Reminder>();
     }
 }
