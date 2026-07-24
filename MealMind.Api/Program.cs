@@ -67,6 +67,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddHttpClient<IAiClient, OpenAiClient>();
 builder.Services.AddScoped<IWeeklyPlanService, WeeklyPlanService>();
+builder.Services.AddHostedService<PrepReminderBgService>();
 
 var app = builder.Build();
 
