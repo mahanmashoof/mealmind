@@ -11,7 +11,6 @@ public record AssignRecipeRequest(DayOfWeek Day, MealSlot Slot, int RecipeId);
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class WeeklyPlansController : ControllerBase
 {
     private readonly IWeeklyPlanService _planService;
@@ -40,6 +39,7 @@ public class WeeklyPlansController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(CreatePlanRequest request)
     {
         var plan = await _planService.CreateAsync(request.WeekStartDate, CurrentUserId);
@@ -47,6 +47,7 @@ public class WeeklyPlansController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _planService.DeleteAsync(id, CurrentUserId);
@@ -59,6 +60,7 @@ public class WeeklyPlansController : ControllerBase
     }
 
     [HttpPost("{planId}/entries")]
+    [Authorize]
     public async Task<IActionResult> AssignRecipe(int planId, AssignRecipeRequest request)
     {
         try
@@ -77,6 +79,7 @@ public class WeeklyPlansController : ControllerBase
     }
 
     [HttpDelete("{planId}/entries/{entryId}")]
+    [Authorize]
     public async Task<IActionResult> RemoveEntry(int planId, int entryId)
     {
         var result = await _planService.RemoveEntryAsync(planId, entryId, CurrentUserId);
