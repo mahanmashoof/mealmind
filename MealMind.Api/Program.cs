@@ -71,6 +71,13 @@ builder.Services.AddHostedService<PrepReminderBgService>();
 
 var app = builder.Build();
 
+//migrate the database automatically
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<MealMindDBContext>();
+    context.Database.Migrate();
+}
+
 //global exception handler
 app.UseExceptionHandler(errorApp =>
 {
@@ -94,3 +101,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public partial class Program { }
