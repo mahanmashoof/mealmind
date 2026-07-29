@@ -8,7 +8,6 @@ namespace MealMind.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 
 public class RecipesController : ControllerBase
 {
@@ -38,6 +37,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(Recipe recipe)
     {
         var created = await _recipeService.CreateAsync(recipe, CurrentUserId);
@@ -45,6 +45,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<IActionResult> Update(int id, Recipe recipe)
     {
         var result = await _recipeService.UpdateAsync(id, recipe, CurrentUserId);
@@ -57,6 +58,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _recipeService.DeleteAsync(id, CurrentUserId);
@@ -69,6 +71,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpPost("{id}/image")]
+    [Authorize]
     public async Task<IActionResult> UploadImage(int id, IFormFile file)
     {
         var recipe = await _recipeService.GetByIdAsync(id);
@@ -90,6 +93,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpPost("ai-generate")]
+    [Authorize]
     public async Task<IActionResult> CreateFromAi([FromBody] string prompt)
     {
         var recipe = await _recipeService.CreateFromAiAsync(prompt, CurrentUserId);
