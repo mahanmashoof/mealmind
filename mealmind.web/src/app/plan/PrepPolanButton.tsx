@@ -1,0 +1,44 @@
+"use client";
+
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { apiFetch } from "@/lib/api";
+
+export default function PrepPlanButton({ planId }: { planId: number }) {
+  const [tasks, setTasks] = useState<string[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { token } = useAuth();
+
+  async function generate() {
+    setLoading(true);
+    try {
+      const result = await apiFetch<{ tasks: string[] }>(
+        `/weeklyplans/${planId}/prep-plan`,
+        { method: "GET" },
+        token,
+      );
+      setTasks(result.tasks);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-4 mb-4">
+      <button
+        onClick={generate}
+        disabled={loading}
+        className="text-blue-600 font-medium text-sm"
+      >
+        {loading ? "Thinking..." : "Generate prep plan"}
+      </button>
+      {tasks && (
+        <ul className="mt-3 text-sm text-gray-700 list-disc list-inside flex flex-col gap-1">
+          {tasks.map((t, i) => (
+            <li key={i}>{t}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
