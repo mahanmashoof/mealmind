@@ -1,0 +1,34 @@
+import { apiFetch } from "@/lib/api";
+import { Recipe } from "@/types/recipe";
+
+export default async function RecipeDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const recipe = await apiFetch<Recipe>(`/recipes/${id}`);
+
+  return (
+    <main className="min-h-screen px-4 py-6 bg-gray-50">
+      <h1 className="text-2xl font-bold">{recipe.name}</h1>
+      <p className="text-sm text-gray-500 mb-4">
+        {recipe.portions} portions · {recipe.nutrition.calories} cal
+      </p>
+      <h2 className="font-semibold mt-4 mb-1">Ingredients</h2>
+      <ul className="text-sm text-gray-700 list-disc list-inside">
+        {recipe.ingredients.map((i, idx) => (
+          <li key={idx}>
+            {i.quantity} {i.unit} {i.name}
+          </li>
+        ))}
+      </ul>
+      <h2 className="font-semibold mt-4 mb-1">Steps</h2>
+      <ol className="text-sm text-gray-700 list-decimal list-inside flex flex-col gap-1">
+        {recipe.steps.map((step, idx) => (
+          <li key={idx}>{step}</li>
+        ))}
+      </ol>
+    </main>
+  );
+}
