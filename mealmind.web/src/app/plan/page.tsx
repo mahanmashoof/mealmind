@@ -36,32 +36,50 @@ export default async function PlanPage() {
 
   return (
     <main className="min-h-screen px-4 py-6 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-4">This Week</h1>
+      <h1 className="font-display uppercase text-3xl text-ink tracking-wide mb-4">
+        This Week
+      </h1>
       <PrepPlanButton planId={plan.id} />
       {!plan && <p className="text-gray-500">No weekly plan yet.</p>}
       {plan && (
         <div className="flex flex-col gap-4">
           {DAYS.map((day) => (
-            <div key={day} className="bg-white rounded-lg shadow p-4">
-              <p className="font-semibold mb-2">{day}</p>
-              <div className="flex flex-col gap-1">
+            <div
+              key={day}
+              className="relative bg-white border border-stone rounded-b-lg shadow-sm p-4 pt-5"
+              style={{
+                borderTop: "2px dashed var(--color-stone)",
+              }}
+            >
+              <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />
+              <p className="font-display uppercase tracking-wide text-basil text-lg mb-2">
+                {day}
+              </p>
+              <div className="flex flex-col gap-2">
                 {SLOTS.map((slot) => {
                   const entry = plan.entries.find(
                     (e) => e.day === day && e.slot === slot,
                   );
                   return (
-                    <p key={slot} className="text-sm text-gray-600">
-                      <span className="font-medium">{slot}:</span>{" "}
-                      {entry?.recipe?.name ??
-                        (plan && (
-                          <AssignSlotButton
-                            planId={plan.id}
-                            day={day}
-                            slot={slot}
-                            recipes={recipes}
-                          />
-                        ))}
-                    </p>
+                    <div
+                      key={slot}
+                      className="flex items-baseline justify-between text-sm"
+                    >
+                      <span className="uppercase text-xs tracking-wide text-ink/60">
+                        {slot}
+                      </span>
+                      <span className="font-body">
+                        {entry?.recipe?.name ??
+                          (plan && (
+                            <AssignSlotButton
+                              planId={plan.id}
+                              day={day}
+                              slot={slot}
+                              recipes={recipes}
+                            />
+                          ))}
+                      </span>
+                    </div>
                   );
                 })}
               </div>

@@ -16,10 +16,14 @@ export default async function RecipeDetailPage({
         {recipe.portions} portions · {recipe.nutrition.calories} cal
       </p>
       <h2 className="font-semibold mt-4 mb-1">Ingredients</h2>
-      <ul className="text-sm text-gray-700 list-disc list-inside">
+      <ul className="font-mono text-sm flex flex-col gap-1">
         {recipe.ingredients.map((i, idx) => (
-          <li key={idx}>
-            {i.quantity} {i.unit} {i.name}
+          <li key={idx} className="flex items-baseline gap-2">
+            <span>{i.name}</span>
+            <span className="flex-1 border-b border-dotted border-stone -translate-y-0.75" />
+            <span className="text-basil">
+              {i.quantity} {i.unit}
+            </span>
           </li>
         ))}
       </ul>
