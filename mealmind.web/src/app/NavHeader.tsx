@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 
 export default function NavHeader() {
-  const { token, logout } = useAuth();
+  const { token, email, logout } = useAuth();
 
   return (
     <header className="bg-ink text-parchment px-4 py-3 flex items-center justify-between">
@@ -15,9 +15,12 @@ export default function NavHeader() {
         <Link href="/plan">Plan</Link>
         <Link href="/recipes/ai-generate">Ask AI</Link>
         {token ? (
-          <button onClick={logout} className="text-butter">
-            Log out
-          </button>
+          <>
+            <span className="text-parchment/60 text-xs">{email}</span>
+            <button onClick={logout} className="text-butter">
+              Log out
+            </button>
+          </>
         ) : (
           <Link href="/login" className="text-butter">
             Log in

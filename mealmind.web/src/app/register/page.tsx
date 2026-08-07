@@ -34,7 +34,7 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-white rounded-lg shadow p-6 w-full max-w-sm flex flex-col gap-3"
       >
-        <h1 className="text-xl font-bold mb-2">Log in</h1>
+        <h1 className="text-xl font-bold mb-2">Register</h1>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <input
           type="email"
