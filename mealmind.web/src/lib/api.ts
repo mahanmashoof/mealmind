@@ -10,13 +10,16 @@ export async function apiFetch<T>(
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-
       ...options?.headers,
     },
   });
 
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
+  }
+
+  if (res.status === 204) {
+    return undefined as T;
   }
 
   return res.json();
