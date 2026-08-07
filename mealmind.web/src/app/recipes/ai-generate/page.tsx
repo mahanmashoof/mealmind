@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { Recipe } from "@/types/recipe";
+import { buttonPrimary } from "@/lib/styles";
 
 export default function AiGeneratePage() {
   const [prompt, setPrompt] = useState("");
@@ -37,11 +38,7 @@ export default function AiGeneratePage() {
           onChange={(e) => setPrompt(e.target.value)}
           className="border rounded px-3 py-2 h-24"
         />
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white rounded py-2 font-medium disabled:opacity-50"
-        >
+        <button type="submit" className={buttonPrimary}>
           {loading ? "Cooking up ideas..." : "Generate"}
         </button>
       </form>

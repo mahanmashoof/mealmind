@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
+import { buttonPrimary } from "@/lib/styles";
 
 export default function NewRecipePage() {
   const [name, setName] = useState("");
@@ -39,10 +40,7 @@ export default function NewRecipePage() {
           onChange={(e) => setName(e.target.value)}
           className="border rounded px-3 py-2"
         />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white rounded py-2 font-medium"
-        >
+        <button type="submit" className={buttonPrimary}>
           Create
         </button>
       </form>

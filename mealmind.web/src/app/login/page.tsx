@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
+import { buttonPrimary } from "@/lib/styles";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -49,10 +50,7 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           className="border rounded px-3 py-2"
         />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white rounded py-2 font-medium"
-        >
+        <button type="submit" className={buttonPrimary}>
           Log in
         </button>
       </form>
