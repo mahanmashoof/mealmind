@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
 
 function mondayOfThisWeek(): string {
@@ -16,29 +15,32 @@ function mondayOfThisWeek(): string {
 
 export default function CreatePlanButton() {
   const [loading, setLoading] = useState(false);
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const router = useRouter();
+  const [error, setError] = useState("");
 
   async function create() {
     setLoading(true);
+    setError("");
     try {
-      await apiFetch(
-        "/weeklyplans",
-        {
-          method: "POST",
-          body: JSON.stringify({ weekStartDate: mondayOfThisWeek() }),
-        },
-        token,
-      );
+      await authFetch("/weeklyplans", {
+        method: "POST",
+        body: JSON.stringify({ weekStartDate: mondayOfThisWeek() }),
+      });
       router.refresh();
+    } catch {
+      setError("Couldn't create a plan. Try logging in again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <button onClick={create} disabled={loading} className={buttonPrimary}>
-      {loading ? "Creating..." : "Start this week's plan"}
-    </button>
+    <div className="flex flex-col items-center gap-2">
+      <button onClick={create} disabled={loading} className={buttonPrimary}>
+        {loading ? "Creating..." : "Start this week's plan"}
+      </button>
+      {error && <p className="text-red-600 text-xs">{error}</p>}
+    </div>
   );
 }

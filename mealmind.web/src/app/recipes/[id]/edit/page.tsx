@@ -10,8 +10,9 @@ import { Recipe } from "@/types/recipe";
 export default function EditRecipePage() {
   const { id } = useParams<{ id: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const router = useRouter();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     apiFetch<Recipe>(`/recipes/${id}`).then(setRecipe);
@@ -20,12 +21,16 @@ export default function EditRecipePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!recipe) return;
-    await apiFetch(
-      `/recipes/${id}`,
-      { method: "PUT", body: JSON.stringify(recipe) },
-      token,
-    );
-    router.push(`/recipes/${id}`);
+    setError("");
+    try {
+      await authFetch(`/recipes/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(recipe),
+      });
+      router.push(`/recipes/${id}`);
+    } catch {
+      setError("Couldn't update this recipe.");
+    }
   }
 
   if (!recipe) return <main className="px-4 py-6">Loading...</main>;
@@ -34,6 +39,7 @@ export default function EditRecipePage() {
     <main className="min-h-screen px-4 py-6">
       <h1 className="font-display uppercase text-2xl mb-4">Edit Recipe</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        {error && <span className="text-red-600">{error}</span>}
         <input
           value={recipe.name}
           onChange={(e) => setRecipe({ ...recipe, name: e.target.value })}

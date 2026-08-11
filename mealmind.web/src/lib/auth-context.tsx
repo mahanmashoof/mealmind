@@ -8,6 +8,8 @@ import {
   ReactNode,
 } from "react";
 import { decodeToken } from "./jwt";
+import { useRouter } from "next/navigation";
+import { ApiError, apiFetch } from "./api";
 
 interface AuthContextType {
   token: string | null;
@@ -15,6 +17,7 @@ interface AuthContextType {
   userId: string | null;
   login: (token: string) => void;
   logout: () => void;
+  authFetch: <T>(path: string, options?: RequestInit) => Promise<T>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -47,10 +50,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setEmail(null);
     setUserId(null);
+    router.push("/");
   };
 
+  const router = useRouter();
+
+  async function authFetch<T>(path: string, options?: RequestInit): Promise<T> {
+    try {
+      return await apiFetch<T>(path, options, token);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        logout();
+        router.push("/login");
+      }
+      throw err; // still lets the calling component show its own message for non-401 errors
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ token, email, userId, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, email, userId, login, logout, authFetch }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -3,19 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
 
 export default function NewRecipePage() {
   const [name, setName] = useState("");
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const router = useRouter();
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await apiFetch(
-      "/recipes",
-      {
+    setError("");
+    try {
+      await authFetch("/recipes", {
         method: "POST",
         body: JSON.stringify({
           name,
@@ -24,15 +24,17 @@ export default function NewRecipePage() {
           ingredients: [],
           portions: 1,
         }),
-      },
-      token,
-    );
-    router.push("/");
+      });
+      router.push("/");
+    } catch {
+      setError("Couldn't create this recipe.");
+    }
   }
 
   return (
     <main className="min-h-screen px-4 py-6 bg-gray-50">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        {error && <p className="text-red-600 text-xs">{error}</p>}
         <h1 className="text-xl font-bold">New Recipe</h1>
         <input
           placeholder="Recipe name"

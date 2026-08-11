@@ -2,22 +2,23 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
 
 export default function PrepPlanButton({ planId }: { planId: number }) {
   const [tasks, setTasks] = useState<string[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
+  const [error, setError] = useState("");
 
   async function generate() {
     setLoading(true);
     try {
-      const result = await apiFetch<{ tasks: string[] }>(
+      const result = await authFetch<{ tasks: string[] }>(
         `/weeklyplans/${planId}/prep-plan`,
         { method: "GET" },
-        token,
       );
       setTasks(result.tasks);
+    } catch {
+      setError("Couldn't generate a plan. Try logging in again.");
     } finally {
       setLoading(false);
     }
@@ -25,13 +26,16 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
 
   return (
     <div className="bg-white rounded-lg shadow p-4 mb-4">
-      <button
-        onClick={generate}
-        disabled={loading}
-        className="text-blue-600 font-medium text-sm"
-      >
-        {loading ? "Thinking..." : "Generate prep plan"}
-      </button>
+      <div className="flex flex-col items-center gap-2">
+        <button
+          onClick={generate}
+          disabled={loading}
+          className="text-blue-600 font-medium text-sm"
+        >
+          {loading ? "Thinking..." : "Generate prep plan"}
+        </button>
+        {error && <p className="text-red-600 text-xs">{error}</p>}
+      </div>
       {tasks && (
         <ul className="mt-3 text-sm text-gray-700 list-disc list-inside flex flex-col gap-1">
           {tasks.map((t, i) => (
