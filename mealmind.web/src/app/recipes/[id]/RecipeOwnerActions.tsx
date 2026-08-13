@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import DeleteRecipeButton from "./DeleteRecipeButton";
+import ImageUpload from "./ImageUpload";
 
 export default function RecipeOwnerActions({
   recipeId,
@@ -16,14 +17,17 @@ export default function RecipeOwnerActions({
   if (userId !== ownerId) return null;
 
   return (
-    <div className="flex items-center gap-4 mb-2">
-      <Link
-        href={`/recipes/${recipeId}/edit`}
-        className="text-xs text-basil hover:underline"
-      >
-        Edit
-      </Link>
-      <DeleteRecipeButton recipeId={recipeId} />
+    <div className="flex flex-col gap-2 mb-2">
+      <div className="flex items-center gap-4">
+        <Link
+          href={`/recipes/${recipeId}/edit`}
+          className="text-xs text-basil hover:underline"
+        >
+          Edit
+        </Link>
+        <DeleteRecipeButton recipeId={recipeId} />
+      </div>
+      <ImageUpload recipeId={recipeId} />
     </div>
   );
 }
