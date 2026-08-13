@@ -1,7 +1,5 @@
 import { apiFetch } from "@/lib/api";
 import { Recipe } from "@/types/recipe";
-import Link from "next/link";
-import DeleteRecipeButton from "./DeleteRecipeButton";
 import RecipeOwnerActions from "./RecipeOwnerActions";
 
 export default async function RecipeDetailPage({
@@ -15,6 +13,14 @@ export default async function RecipeDetailPage({
   return (
     <main className="min-h-screen px-4 py-6 bg-gray-50">
       <h1 className="text-2xl font-bold">{recipe.name}</h1>
+      {recipe.imageUrl && (
+        <img
+          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${recipe.imageUrl}`}
+          alt={recipe.name}
+          className="w-full rounded-lg mb-3 border border-stone"
+        />
+      )}
+
       <RecipeOwnerActions recipeId={recipe.id} ownerId={recipe.userId} />
       <p className="text-sm text-gray-500 mb-4">
         {recipe.portions} portions · {recipe.nutrition.calories} cal
