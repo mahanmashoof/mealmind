@@ -29,26 +29,30 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
+    <main className="min-h-screen flex items-center justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-lg shadow p-6 w-full max-w-sm flex flex-col gap-3"
+        className="relative bg-white border border-stone rounded-b-lg shadow-sm p-6 pt-7 w-full max-w-sm flex flex-col gap-3"
+        style={{ borderTop: "2px dashed var(--color-stone)" }}
       >
-        <h1 className="text-xl font-bold mb-2">Log in</h1>
+        <span className="absolute -top-2 left-6 w-3 h-3 rounded-full bg-parchment border border-stone" />
+        <h1 className="font-display uppercase text-2xl text-ink tracking-wide mb-2">
+          Log In
+        </h1>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border rounded px-3 py-2"
+          className="border border-stone rounded px-3 py-2 bg-white"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border rounded px-3 py-2"
+          className="border border-stone rounded px-3 py-2 bg-white"
         />
         <button type="submit" className={buttonPrimary}>
           Log in
