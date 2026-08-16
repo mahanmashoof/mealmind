@@ -14,6 +14,7 @@ export default function NavHeader() {
       <nav className="flex items-center gap-4 text-sm">
         <Link href="/plan">Plan</Link>
         <Link href="/recipes/ai-generate">Ask AI</Link>
+        <Link href="/reminders">Reminders</Link>
         {token ? (
           <>
             <span className="text-parchment/60 text-xs">{email}</span>
