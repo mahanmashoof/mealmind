@@ -16,6 +16,10 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!email.includes("@")) {
+      setError("Enter a valid email address.");
+      return;
+    }
     try {
       const result = await apiFetch<{ token: string }>("/auth/login", {
         method: "POST",
@@ -42,17 +46,19 @@ export default function LoginPage() {
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Email *"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-white"
+          required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password *"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-white"
+          required
         />
         <button type="submit" className={buttonPrimary}>
           Log in
