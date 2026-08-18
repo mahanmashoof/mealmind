@@ -60,6 +60,18 @@ export default function EditRecipePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!name.trim()) {
+      setError("Recipe needs a name.");
+      return;
+    }
+    if (portions < 1) {
+      setError("Portions must be at least 1.");
+      return;
+    }
+    if (steps.filter((s) => s.trim() !== "").length === 0) {
+      setError("Add at least one step.");
+      return;
+    }
     try {
       await authFetch(`/recipes/${id}`, {
         method: "PUT",
@@ -87,10 +99,11 @@ export default function EditRecipePage() {
 
         <div className="flex flex-col gap-2">
           <input
-            placeholder="Recipe name"
+            placeholder="Recipe name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="border border-stone rounded px-3 py-2 bg-white"
+            required
           />
           <label className="text-sm text-ink/60">Portions</label>
           <input

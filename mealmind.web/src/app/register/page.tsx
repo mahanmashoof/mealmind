@@ -15,6 +15,14 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!email.includes("@")) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
     try {
       await apiFetch("/auth/register", {
         method: "POST",
@@ -48,17 +56,19 @@ export default function RegisterPage() {
         )}
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Email *"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-white"
+          required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password*"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-white"
+          required
         />
         <button type="submit" className={buttonPrimary}>
           Create account
