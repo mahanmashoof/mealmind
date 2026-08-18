@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary, buttonGhost } from "@/lib/styles";
 import { Recipe, Ingredient } from "@/types/recipe";
+import { Plus } from "lucide-react";
 
 export default function EditRecipePage() {
   const { id } = useParams<{ id: string }>();
@@ -152,9 +153,9 @@ export default function EditRecipePage() {
                 { name: "", quantity: 0, unit: "" },
               ])
             }
-            className={buttonGhost}
+            className={`${buttonGhost} flex items-center gap-1`}
           >
-            + add ingredient
+            <Plus size={14} /> add ingredient
           </button>
         </div>
 
@@ -174,9 +175,9 @@ export default function EditRecipePage() {
           <button
             type="button"
             onClick={() => setSteps([...steps, ""])}
-            className={buttonGhost}
+            className={`${buttonGhost} flex items-center gap-1`}
           >
-            + add step
+            <Plus size={14} /> add step
           </button>
         </div>
 

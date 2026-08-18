@@ -17,6 +17,14 @@ const DAYS = [
   "Sunday",
 ];
 const SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"];
+import { Coffee, Sun, Moon, Cookie } from "lucide-react";
+
+const SLOT_ICONS: Record<string, React.ReactNode> = {
+  Breakfast: <Coffee size={14} />,
+  Lunch: <Sun size={14} />,
+  Dinner: <Moon size={14} />,
+  Snack: <Cookie size={14} />,
+};
 
 export default function PlanBoard({
   plans,
@@ -69,8 +77,8 @@ export default function PlanBoard({
                       key={slot}
                       className="flex items-baseline justify-between text-sm"
                     >
-                      <span className="uppercase text-xs tracking-wide text-ink/60">
-                        {slot}
+                      <span className="uppercase text-xs tracking-wide text-ink/60 flex items-center gap-1">
+                        {SLOT_ICONS[slot]} {slot}
                       </span>
                       {entry ? (
                         <span className="flex items-center">

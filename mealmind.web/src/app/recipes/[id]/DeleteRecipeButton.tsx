@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { Trash2 } from "lucide-react";
 
 export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   const [confirming, setConfirming] = useState(false);
@@ -39,9 +40,9 @@ export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   return (
     <button
       onClick={() => setConfirming(true)}
-      className="text-xs text-ink/40 hover:text-red-600"
+      className="text-xs text-ink/40 hover:text-red-600 flex items-center gap-1"
     >
-      Delete recipe
+      <Trash2 size={12} /> Delete recipe
     </button>
   );
 }

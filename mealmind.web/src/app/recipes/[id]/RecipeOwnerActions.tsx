@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import DeleteRecipeButton from "./DeleteRecipeButton";
 import ImageUpload from "./ImageUpload";
+import { Pencil } from "lucide-react";
 
 export default function RecipeOwnerActions({
   recipeId,
@@ -21,9 +22,9 @@ export default function RecipeOwnerActions({
       <div className="flex items-center gap-4">
         <Link
           href={`/recipes/${recipeId}/edit`}
-          className="text-xs text-basil hover:underline"
+          className="text-xs text-basil hover:underline flex items-center gap-1"
         >
-          Edit
+          <Pencil size={12} /> Edit
         </Link>
         <DeleteRecipeButton recipeId={recipeId} />
       </div>
