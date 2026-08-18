@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary, buttonGhost } from "@/lib/styles";
 import { Ingredient } from "@/types/recipe";
+import { Plus } from "lucide-react";
 
 export default function NewRecipePage() {
   const [name, setName] = useState("");
@@ -131,9 +132,9 @@ export default function NewRecipePage() {
                 { name: "", quantity: 0, unit: "" },
               ])
             }
-            className={buttonGhost}
+            className={`${buttonGhost} flex items-center gap-1`}
           >
-            + add ingredient
+            <Plus size={14} /> add ingredient
           </button>
         </div>
 
@@ -153,9 +154,9 @@ export default function NewRecipePage() {
           <button
             type="button"
             onClick={() => setSteps([...steps, ""])}
-            className={buttonGhost}
+            className={`${buttonGhost} flex items-center gap-1`}
           >
-            + add step
+            <Plus size={14} /> add step
           </button>
         </div>
 
