@@ -41,7 +41,11 @@ export default function AiGeneratePage() {
           onChange={(e) => setPrompt(e.target.value)}
           className="border rounded px-3 py-2 h-24"
         />
-        <button type="submit" className={buttonPrimary}>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
+        >
           {loading ? "Cooking up ideas..." : "Generate"}
         </button>
       </form>
