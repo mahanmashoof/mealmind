@@ -2,6 +2,7 @@ import { Anton, Lora, IBM_Plex_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 import NavHeader from "./NavHeader";
+import { ThemeProvider } from "@/lib/theme-context";
 
 const anton = Anton({
   weight: "400",
@@ -26,10 +27,12 @@ export default function RootLayout({
       className={`${anton.variable} ${lora.variable} ${mono.variable}`}
     >
       <body>
-        <AuthProvider>
-          <NavHeader />
-          {children}
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <NavHeader />
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

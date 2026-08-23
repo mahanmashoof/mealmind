@@ -1,11 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, Sparkles, Bell, LogOut, LogIn } from "lucide-react";
+import {
+  CalendarDays,
+  Sparkles,
+  Bell,
+  LogOut,
+  LogIn,
+  SunMedium,
+  Moon,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useTheme } from "@/lib/theme-context";
 
 export default function NavHeader() {
   const { token, email, logout } = useAuth();
+  const { dark, toggle } = useTheme();
 
   return (
     <header className="bg-ink text-parchment px-4 py-3 flex items-center justify-between">
@@ -39,6 +49,9 @@ export default function NavHeader() {
             <LogIn size={16} /> Log in
           </Link>
         )}
+        <button onClick={toggle} aria-label="Toggle dark mode">
+          {dark ? <SunMedium size={16} /> : <Moon size={16} />}
+        </button>
       </nav>
     </header>
   );

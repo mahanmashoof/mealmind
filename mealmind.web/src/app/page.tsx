@@ -13,7 +13,7 @@ export default async function HomePage() {
         {recipes.map((recipe) => (
           <li
             key={recipe.id}
-            className="relative bg-white border border-stone rounded-b-lg shadow-sm p-4 pt-5"
+            className="relative bg-surface border border-stone rounded-b-lg shadow-sm p-4 pt-5"
             style={{ borderTop: "2px dashed var(--color-stone)" }}
           >
             <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />

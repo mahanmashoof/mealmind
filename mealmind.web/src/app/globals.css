@@ -1,11 +1,31 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --parchment: #F7F3E9;
+  --surface: #FFFFFF;
+  --ink: #22201C;
+  --basil: #3F5D3A;
+  --butter: #D8A438;
+  --stone: #C9C2B4;
+}
+
+.dark {
+  --parchment: #1E1C18;
+  --surface: #2A2620;
+  --ink: #EFE9DA;
+  --basil: #6B9A66;
+  --butter: #E5B84D;
+  --stone: #4A453B;
+}
 
 @theme {
-  --color-parchment: #F7F3E9;
-  --color-ink: #22201C;
-  --color-basil: #3F5D3A;
-  --color-butter: #D8A438;
-  --color-stone: #C9C2B4;
+  --color-parchment: var(--parchment);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-basil: var(--basil);
+  --color-butter: var(--butter);
+  --color-stone: var(--stone);
 
   --font-display: var(--font-display);
   --font-body: var(--font-body);

@@ -25,7 +25,7 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mb-4">
+    <div className="bg-surface rounded-lg shadow p-4 mb-4">
       <div className="flex flex-col items-center gap-2">
         <button
           onClick={generate}
