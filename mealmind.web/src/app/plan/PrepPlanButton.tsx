@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { buttonPrimary } from "@/lib/styles";
 
 export default function PrepPlanButton({ planId }: { planId: number }) {
   const [tasks, setTasks] = useState<string[] | null>(null);
@@ -28,9 +29,9 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
     <div className="bg-surface rounded-lg shadow p-4 mb-4">
       <div className="flex flex-col items-center gap-2">
         <button
-          onClick={generate}
+          type="submit"
           disabled={loading}
-          className="text-blue-600 font-medium text-sm"
+          className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
         >
           {loading ? "Thinking..." : "Generate prep plan"}
         </button>

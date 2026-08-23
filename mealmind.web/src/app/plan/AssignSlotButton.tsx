@@ -52,7 +52,7 @@ export default function AssignSlotButton({
       autoFocus
       onChange={(e) => assign(Number(e.target.value))}
       onBlur={() => setOpen(false)}
-      className="text-sm border rounded px-2 py-1"
+      className="text-sm border border-stone rounded px-2 py-1 bg-surface animate-fade-in"
     >
       <option value="">Choose a recipe...</option>
       {recipes.map((r) => (
