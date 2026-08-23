@@ -42,7 +42,7 @@ export default function RemindersPage() {
         {reminders.map((r) => (
           <li
             key={r.id}
-            className={`bg-white border border-stone rounded p-3 text-sm flex items-center justify-between ${
+            className={`bg-surface border border-stone rounded p-3 text-sm flex items-center justify-between ${
               r.isRead ? "opacity-50" : ""
             }`}
           >

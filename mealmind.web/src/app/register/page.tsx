@@ -41,7 +41,7 @@ export default function RegisterPage() {
     <main className="min-h-screen flex items-center justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="relative bg-white border border-stone rounded-b-lg shadow-sm p-6 pt-7 w-full max-w-sm flex flex-col gap-3"
+        className="relative bg-surface border border-stone rounded-b-lg shadow-sm p-6 pt-7 w-full max-w-sm flex flex-col gap-3"
         style={{ borderTop: "2px dashed var(--color-stone)" }}
       >
         <span className="absolute -top-2 left-6 w-3 h-3 rounded-full bg-parchment border border-stone" />
@@ -59,7 +59,7 @@ export default function RegisterPage() {
           placeholder="Email *"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-stone rounded px-3 py-2 bg-white"
+          className="border border-stone rounded px-3 py-2 bg-surface"
           required
         />
         <input
@@ -67,7 +67,7 @@ export default function RegisterPage() {
           placeholder="Password*"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-stone rounded px-3 py-2 bg-white"
+          className="border border-stone rounded px-3 py-2 bg-surface"
           required
         />
         <button type="submit" className={buttonPrimary}>

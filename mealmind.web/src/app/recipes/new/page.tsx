@@ -82,7 +82,7 @@ export default function NewRecipePage() {
             placeholder="Recipe name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border border-stone rounded px-3 py-2 bg-white"
+            className="border border-stone rounded px-3 py-2 bg-surface"
             required
           />
           <label className="text-sm text-ink/60">Portions</label>
@@ -91,7 +91,7 @@ export default function NewRecipePage() {
             min={1}
             value={portions}
             onChange={(e) => setPortions(Number(e.target.value))}
-            className="border border-stone rounded px-3 py-2 bg-white w-24"
+            className="border border-stone rounded px-3 py-2 bg-surface w-24"
           />
         </div>
 
@@ -105,7 +105,7 @@ export default function NewRecipePage() {
                 placeholder="Name"
                 value={ing.name}
                 onChange={(e) => updateIngredient(i, "name", e.target.value)}
-                className="border border-stone rounded px-2 py-1 bg-white flex-1"
+                className="border border-stone rounded px-2 py-1 bg-surface flex-1"
               />
               <input
                 type="number"
@@ -114,13 +114,13 @@ export default function NewRecipePage() {
                 onChange={(e) =>
                   updateIngredient(i, "quantity", Number(e.target.value))
                 }
-                className="border border-stone rounded px-2 py-1 bg-white w-20"
+                className="border border-stone rounded px-2 py-1 bg-surface w-20"
               />
               <input
                 placeholder="Unit"
                 value={ing.unit}
                 onChange={(e) => updateIngredient(i, "unit", e.target.value)}
-                className="border border-stone rounded px-2 py-1 bg-white w-20"
+                className="border border-stone rounded px-2 py-1 bg-surface w-20"
               />
             </div>
           ))}
@@ -148,7 +148,7 @@ export default function NewRecipePage() {
               placeholder={`Step ${i + 1}`}
               value={step}
               onChange={(e) => updateStep(i, e.target.value)}
-              className="border border-stone rounded px-2 py-1 bg-white w-full mb-2"
+              className="border border-stone rounded px-2 py-1 bg-surface w-full mb-2"
             />
           ))}
           <button
@@ -182,7 +182,7 @@ export default function NewRecipePage() {
                       [field]: Number(e.target.value),
                     })
                   }
-                  className="border border-stone rounded px-2 py-1 bg-white"
+                  className="border border-stone rounded px-2 py-1 bg-surface"
                 />
               </label>
             ))}

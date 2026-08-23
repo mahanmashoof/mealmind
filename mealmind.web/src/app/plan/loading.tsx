@@ -6,7 +6,7 @@ export default function Loading() {
         {[...Array(7)].map((_, i) => (
           <div
             key={i}
-            className="bg-white border border-stone rounded-b-lg shadow-sm p-4 pt-5"
+            className="bg-surface border border-stone rounded-b-lg shadow-sm p-4 pt-5"
           >
             <div className="h-5 w-24 bg-stone/40 rounded animate-pulse mb-3" />
             <div className="flex flex-col gap-2">
