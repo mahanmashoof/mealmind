@@ -36,7 +36,12 @@ export default function RemindersPage() {
         Reminders
       </h1>
       {reminders.length === 0 && (
-        <p className="text-ink/60">No reminders yet.</p>
+        <div className="text-center py-10">
+          <p className="text-ink/60">
+            No reminders yet — they'll show up here the night before a planned
+            meal.
+          </p>
+        </div>
       )}
       <ul className="flex flex-col gap-2">
         {reminders.map((r) => (
