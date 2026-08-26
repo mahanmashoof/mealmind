@@ -15,7 +15,7 @@ export default async function RecipeDetailPage({
       <h1 className="text-2xl font-bold">{recipe.name}</h1>
       {recipe.imageUrl && (
         <img
-          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${recipe.imageUrl}`}
+          src={recipe.imageUrl}
           alt={recipe.name}
           className="w-full rounded-lg mb-3 border border-stone"
         />
