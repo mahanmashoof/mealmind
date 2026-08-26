@@ -3,6 +3,8 @@ using MealMind.Api.Services;
 using MealMind.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 
 namespace MealMind.Api.Controllers;
 
@@ -16,10 +18,12 @@ public class RecipesController : ControllerBase
     ?? throw new InvalidOperationException("User ID claim missing");
 
     private readonly IRecipeService _recipeService;
+    private readonly Cloudinary _cloudinary;
 
-    public RecipesController(IRecipeService recipeService)
+    public RecipesController(IRecipeService recipeService, Cloudinary cloudinary)
     {
         _recipeService = recipeService;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet]
@@ -78,15 +82,15 @@ public class RecipesController : ControllerBase
         if (recipe is null) return NotFound();
         if (recipe.UserId != CurrentUserId) return Forbid();
 
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        var filePath = Path.Combine("wwwroot/uploads", fileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        await using var stream = file.OpenReadStream();
+        var uploadParams = new ImageUploadParams
         {
-            await file.CopyToAsync(stream);
-        }
+            File = new FileDescription(file.FileName, stream),
+            Folder = "mealmind-recipes"
+        };
+        var result = await _cloudinary.UploadAsync(uploadParams);
 
-        recipe.ImageUrl = $"/uploads/{fileName}";
+        recipe.ImageUrl = result.SecureUrl.ToString();
         await _recipeService.UpdateAsync(id, recipe, CurrentUserId);
 
         return Ok(new { imageUrl = recipe.ImageUrl });
