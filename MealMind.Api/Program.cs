@@ -72,7 +72,7 @@ builder.Services.AddHostedService<PrepReminderBgService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins("http://localhost:3000", "https://mealmind-virid.vercel.app/")
+        policy.WithOrigins("http://localhost:3000", "https://mymealmind.vercel.app/")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
