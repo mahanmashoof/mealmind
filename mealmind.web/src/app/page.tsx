@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
 import { Recipe } from "@/types/recipe";
