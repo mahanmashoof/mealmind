@@ -68,10 +68,10 @@ public class WeeklyPlanService : IWeeklyPlanService
     }
 
     public async Task<IEnumerable<WeeklyPlan>> GetAllAsync() =>
-        await _context.WeeklyPlans.Include(p => p.Entries).ToListAsync();
+        await _context.WeeklyPlans.Include(p => p.Entries).ThenInclude(e => e.Recipe).ToListAsync();
 
     public async Task<WeeklyPlan?> GetByIdAsync(int id) =>
-        await _context.WeeklyPlans.Include(p => p.Entries).FirstOrDefaultAsync(p => p.Id == id);
+        await _context.WeeklyPlans.Include(p => p.Entries).ThenInclude(e => e.Recipe).FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId)
     {
