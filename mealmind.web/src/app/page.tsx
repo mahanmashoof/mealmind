@@ -31,13 +31,15 @@ export default async function HomePage() {
             className="relative bg-surface border border-stone rounded-b-lg shadow-sm p-4 pt-5"
             style={{ borderTop: "2px dashed var(--color-stone)" }}
           >
-            <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />
-            <p className="font-display uppercase tracking-wide text-ink">
-              {recipe.name}
-            </p>
-            <p className="font-mono text-xs text-basil mt-1">
-              {recipe.nutrition.calories} cal · {recipe.portions} portions
-            </p>
+            <Link href={`/recipes/${recipe.id}`} className="block">
+              <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />
+              <p className="font-display uppercase tracking-wide text-ink">
+                {recipe.name}
+              </p>
+              <p className="font-mono text-xs text-basil mt-1">
+                {recipe.nutrition.calories} cal · {recipe.portions} portions
+              </p>
+            </Link>
           </li>
         ))}
       </ul>
