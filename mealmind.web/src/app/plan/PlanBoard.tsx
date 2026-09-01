@@ -37,7 +37,7 @@ export default function PlanBoard({
   const plan = plans.find((p) => p.userId === userId);
 
   return (
-    <main className="min-h-screen px-4 py-6">
+    <main className="px-4 py-6">
       <h1 className="font-display uppercase text-3xl text-ink tracking-wide mb-4">
         This Week
       </h1>

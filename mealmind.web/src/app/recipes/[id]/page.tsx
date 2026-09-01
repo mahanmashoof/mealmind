@@ -13,7 +13,7 @@ export default async function RecipeDetailPage({
   const recipe = await apiFetch<Recipe>(`/recipes/${id}`);
 
   return (
-    <main className="min-h-screen px-4 py-6 bg-gray-50">
+    <main className="px-4 py-6 bg-gray-50">
       <h1 className="text-2xl font-bold">{recipe.name}</h1>
       {recipe.imageUrl && (
         <img

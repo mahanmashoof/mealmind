@@ -72,7 +72,7 @@ export default function NewRecipePage() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-6">
+    <main className="px-4 py-6">
       <h1 className="font-display uppercase text-2xl mb-4">New Recipe</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {error && <p className="text-red-600 text-sm">{error}</p>}

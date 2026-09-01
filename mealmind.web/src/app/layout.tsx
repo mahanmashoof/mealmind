@@ -29,8 +29,10 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <AuthProvider>
-            <NavHeader />
-            {children}
+            <div className="min-h-screen flex flex-col">
+              <NavHeader />
+              <div className="flex-1">{children}</div>
+            </div>
           </AuthProvider>
         </ThemeProvider>
       </body>

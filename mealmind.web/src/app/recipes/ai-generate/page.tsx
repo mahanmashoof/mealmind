@@ -31,7 +31,7 @@ export default function AiGeneratePage() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-6 bg-gray-50">
+    <main className="px-4 py-6 bg-gray-50">
       <h1 className="text-xl font-bold mb-4">Ask the AI for a recipe</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         {error && <p className="text-red-600 text-xs">{error}</p>}

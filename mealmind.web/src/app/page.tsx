@@ -9,7 +9,7 @@ export default async function HomePage() {
   const recipes = await apiFetch<Recipe[]>("/recipes");
 
   return (
-    <main className="min-h-screen px-4 py-6">
+    <main className="px-4 py-6">
       {recipes.length === 0 ? (
         <div className="text-center py-10">
           <p className="text-ink/60 mb-4">

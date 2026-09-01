@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="min-h-screen px-4 py-6">
+    <main className="px-4 py-6">
       <div className="h-8 w-40 bg-stone/40 rounded animate-pulse mb-4" />
       <ul className="flex flex-col gap-3">
         {[...Array(4)].map((_, i) => (

@@ -31,7 +31,7 @@ export default function RemindersPage() {
   if (loading) return <main className="px-4 py-6">Loading...</main>;
 
   return (
-    <main className="min-h-screen px-4 py-6">
+    <main className="px-4 py-6">
       <h1 className="font-display uppercase text-2xl text-ink tracking-wide mb-4">
         Reminders
       </h1>
