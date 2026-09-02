@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     if (!email.includes("@")) {
@@ -73,6 +74,12 @@ export default function RegisterPage() {
         <button type="submit" className={buttonPrimary}>
           Create account
         </button>
+        <p className="text-xs text-ink/60 text-center mt-1">
+          Already have an account?{" "}
+          <Link href="/login" className="text-basil hover:underline">
+            Log in here
+          </Link>
+        </p>
       </form>
     </main>
   );

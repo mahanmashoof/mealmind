@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -63,6 +64,12 @@ export default function LoginPage() {
         <button type="submit" className={buttonPrimary}>
           Log in
         </button>
+        <p className="text-xs text-ink/60 text-center mt-1">
+          No account?{" "}
+          <Link href="/register" className="text-basil hover:underline">
+            Register here
+          </Link>
+        </p>
       </form>
     </main>
   );
