@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary } from "@/lib/styles";
+import { getPrepPlan } from "@/lib/api/plans";
 
 export default function PrepPlanButton({ planId }: { planId: number }) {
   const [tasks, setTasks] = useState<string[] | null>(null);
@@ -13,10 +14,7 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
   async function generate() {
     setLoading(true);
     try {
-      const result = await authFetch<{ tasks: string[] }>(
-        `/weeklyplans/${planId}/prep-plan`,
-        { method: "GET" },
-      );
+      const result = await getPrepPlan(authFetch, planId);
       setTasks(result.tasks);
     } catch {
       setError("Couldn't generate a plan. Try logging in again.");
@@ -32,6 +30,7 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
           type="submit"
           disabled={loading}
           className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
+          onClick={generate}
         >
           {loading ? "Thinking..." : "Generate prep plan"}
         </button>

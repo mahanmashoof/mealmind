@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
 
-import { apiFetch } from "@/lib/api";
 import PlanBoard from "./PlanBoard";
-import { Recipe } from "@/types/recipe";
+import { listPlans } from "@/lib/api/plans";
+import { listRecipes } from "@/lib/api/recipes";
 
 interface MealPlanEntry {
   id: number;
@@ -18,10 +18,7 @@ interface WeeklyPlan {
 }
 
 export default async function PlanPage() {
-  const [plans, recipes] = await Promise.all([
-    apiFetch<WeeklyPlan[]>("/weeklyplans"),
-    apiFetch<Recipe[]>("/recipes"),
-  ]);
+  const [plans, recipes] = await Promise.all([listPlans(), listRecipes()]);
 
   return <PlanBoard plans={plans} recipes={recipes} />;
 }

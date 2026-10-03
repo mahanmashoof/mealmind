@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
 import { buttonPrimary, buttonGhost } from "@/lib/styles";
-import { Recipe, Ingredient } from "@/types/recipe";
+import { Ingredient } from "@/types/recipe";
 import { Plus } from "lucide-react";
+import { getRecipe, updateRecipe } from "@/lib/api/recipes";
 
 export default function EditRecipePage() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +29,7 @@ export default function EditRecipePage() {
   const router = useRouter();
 
   useEffect(() => {
-    apiFetch<Recipe>(`/recipes/${id}`).then((recipe) => {
+    getRecipe(id).then((recipe) => {
       setName(recipe.name);
       setPortions(recipe.portions || 1);
       setSteps(recipe.steps.length > 0 ? recipe.steps : [""]);
@@ -74,15 +74,12 @@ export default function EditRecipePage() {
       return;
     }
     try {
-      await authFetch(`/recipes/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          name,
-          portions,
-          steps: steps.filter((s) => s.trim() !== ""),
-          ingredients: ingredients.filter((i) => i.name.trim() !== ""),
-          nutrition,
-        }),
+      await updateRecipe(authFetch, id, {
+        name,
+        portions,
+        steps: steps.filter((s) => s.trim() !== ""),
+        ingredients: ingredients.filter((i) => i.name.trim() !== ""),
+        nutrition,
       });
       router.push(`/recipes/${id}`);
     } catch {

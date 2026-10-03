@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useState } from "react";
+import { removeEntry } from "@/lib/api/plans";
 
 export default function RemoveEntryButton({
   planId,
@@ -17,9 +18,7 @@ export default function RemoveEntryButton({
 
   async function remove() {
     try {
-      await authFetch(`/weeklyplans/${planId}/entries/${entryId}`, {
-        method: "DELETE",
-      });
+      removeEntry(authFetch, planId, entryId);
       router.refresh();
     } catch {
       setError("Couldn't remove this entry. It may not be yours to delete.");

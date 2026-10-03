@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Recipe } from "@/types/recipe";
 import { buttonPrimary } from "@/lib/styles";
+import { generateRecipeFromAi } from "@/lib/api/recipes";
 
 export default function AiGeneratePage() {
   const [prompt, setPrompt] = useState("");
@@ -13,15 +13,12 @@ export default function AiGeneratePage() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
-      const recipe = await authFetch<Recipe>("/recipes/ai-generate", {
-        method: "POST",
-        body: JSON.stringify(prompt),
-      });
+      const recipe = await generateRecipeFromAi(authFetch, prompt);
       router.push(`/recipes/${recipe.id}`);
     } catch {
       setError("Couldn't generate a recipe. Try again.");

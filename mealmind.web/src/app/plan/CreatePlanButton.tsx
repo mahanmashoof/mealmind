@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary } from "@/lib/styles";
+import { createPlan } from "@/lib/api/plans";
 
 function mondayOfThisWeek(): string {
   const d = new Date();
@@ -23,10 +24,7 @@ export default function CreatePlanButton() {
     setLoading(true);
     setError("");
     try {
-      await authFetch("/weeklyplans", {
-        method: "POST",
-        body: JSON.stringify({ weekStartDate: mondayOfThisWeek() }),
-      });
+      await createPlan(authFetch, mondayOfThisWeek());
       router.refresh();
     } catch {
       setError("Couldn't create a plan. Try logging in again.");

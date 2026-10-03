@@ -4,8 +4,11 @@ import { useAuth } from "@/lib/auth-context";
 import CreatePlanButton from "./CreatePlanButton";
 import AssignSlotButton from "./AssignSlotButton";
 import RemoveEntryButton from "./RemoveEntryButton";
-import { Recipe } from "@/types/recipe";
 import DeletePlanButton from "./DeletePlanButton";
+import PrepPlanButton from "./PrepPlanButton";
+import { Recipe } from "@/types/recipe";
+import { WeeklyPlan } from "@/types/plan";
+import { Coffee, Sun, Moon, Cookie } from "lucide-react";
 
 const DAYS = [
   "Monday",
@@ -17,7 +20,6 @@ const DAYS = [
   "Sunday",
 ];
 const SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"];
-import { Coffee, Sun, Moon, Cookie } from "lucide-react";
 
 const SLOT_ICONS: Record<string, React.ReactNode> = {
   Breakfast: <Coffee size={14} />,
@@ -30,7 +32,7 @@ export default function PlanBoard({
   plans,
   recipes,
 }: {
-  plans: any[];
+  plans: WeeklyPlan[];
   recipes: Recipe[];
 }) {
   const { userId } = useAuth();
@@ -43,9 +45,12 @@ export default function PlanBoard({
       </h1>
 
       {plan && (
-        <div className="flex justify-end mb-2">
-          <DeletePlanButton planId={plan.id} />
-        </div>
+        <>
+          <div className="flex justify-end mb-2">
+            <DeletePlanButton planId={plan.id} />
+          </div>
+          <PrepPlanButton planId={plan.id} />
+        </>
       )}
 
       {!plan && (
@@ -70,7 +75,7 @@ export default function PlanBoard({
               <div className="flex flex-col gap-2">
                 {SLOTS.map((slot) => {
                   const entry = plan.entries.find(
-                    (e: any) => e.day === day && e.slot === slot,
+                    (e) => e.day === day && e.slot === slot,
                   );
                   return (
                     <div

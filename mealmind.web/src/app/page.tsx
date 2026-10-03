@@ -1,13 +1,12 @@
 export const dynamic = "force-dynamic";
 
-import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
-import { Recipe } from "@/types/recipe";
 import Link from "next/link";
 import RecipeCard from "./RecipeCard";
+import { listRecipes } from "@/lib/api/recipes";
 
 export default async function HomePage() {
-  const recipes = await apiFetch<Recipe[]>("/recipes");
+  const recipes = await listRecipes();
 
   return (
     <main className="px-4 py-6">

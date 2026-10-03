@@ -1,8 +1,6 @@
 export const dynamic = "force-dynamic";
-
-import { apiFetch } from "@/lib/api";
-import { Recipe } from "@/types/recipe";
 import RecipeOwnerActions from "./RecipeOwnerActions";
+import { getRecipe } from "@/lib/api/recipes";
 
 export default async function RecipeDetailPage({
   params,
@@ -10,7 +8,7 @@ export default async function RecipeDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const recipe = await apiFetch<Recipe>(`/recipes/${id}`);
+  const recipe = await getRecipe(id);
 
   return (
     <main className="px-4 py-6 bg-gray-50">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Recipe } from "@/types/recipe";
+import { assignRecipe } from "@/lib/api/plans";
 
 export default function AssignSlotButton({
   planId,
@@ -24,10 +25,7 @@ export default function AssignSlotButton({
   async function assign(recipeId: number) {
     setError("");
     try {
-      await authFetch(`/weeklyplans/${planId}/entries`, {
-        method: "POST",
-        body: JSON.stringify({ day, slot, recipeId }),
-      });
+      assignRecipe(authFetch, planId, day, slot, recipeId);
     } catch {
       setError("Couldn't assign a recipe. Try logging in again.");
     } finally {

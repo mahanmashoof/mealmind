@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Pencil, CalendarPlus, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Recipe } from "@/types/recipe";
+import { assignRecipe, listPlans } from "@/lib/api/plans";
 
 const DAYS = [
   "Monday",
@@ -31,17 +32,13 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   async function handleAdd() {
     setStatus("saving");
     try {
-      const plans =
-        await authFetch<{ id: number; userId: string }[]>("/weeklyplans");
+      const plans = await listPlans();
       const myPlan = plans.find((p) => p.userId === userId);
       if (!myPlan) {
         setStatus("error");
         return;
       }
-      await authFetch(`/weeklyplans/${myPlan.id}/entries`, {
-        method: "POST",
-        body: JSON.stringify({ day, slot, recipeId: recipe.id }),
-      });
+      await assignRecipe(authFetch, myPlan.id, day, slot, recipe.id);
       setStatus("done");
       setTimeout(() => {
         setAdding(false);

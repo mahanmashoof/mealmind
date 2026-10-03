@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary, buttonGhost } from "@/lib/styles";
 import { Ingredient } from "@/types/recipe";
 import { Plus } from "lucide-react";
+import { createRecipe } from "@/lib/api/recipes";
 
 export default function NewRecipePage() {
   const [name, setName] = useState("");
@@ -39,7 +40,7 @@ export default function NewRecipePage() {
     );
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     if (!name.trim()) {
@@ -55,15 +56,12 @@ export default function NewRecipePage() {
       return;
     }
     try {
-      const recipe = await authFetch<{ id: number }>("/recipes", {
-        method: "POST",
-        body: JSON.stringify({
-          name,
-          portions,
-          steps: steps.filter((s) => s.trim() !== ""),
-          ingredients: ingredients.filter((i) => i.name.trim() !== ""),
-          nutrition,
-        }),
+      const recipe = await createRecipe(authFetch, {
+        name,
+        portions,
+        steps: steps.filter((s) => s.trim() !== ""),
+        ingredients: ingredients.filter((i) => i.name.trim() !== ""),
+        nutrition,
       });
       router.push(`/recipes/${recipe.id}`);
     } catch {

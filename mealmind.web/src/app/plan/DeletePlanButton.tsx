@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Trash2 } from "lucide-react";
+import { deletePlan } from "@/lib/api/plans";
 
 export default function DeletePlanButton({ planId }: { planId: number }) {
   const [confirming, setConfirming] = useState(false);
@@ -13,7 +14,7 @@ export default function DeletePlanButton({ planId }: { planId: number }) {
 
   async function handleDelete() {
     try {
-      await authFetch(`/weeklyplans/${planId}`, { method: "DELETE" });
+      await deletePlan(authFetch, planId);
       router.refresh();
     } catch {
       setError("Couldn't delete this plan. It may not be yours to delete.");

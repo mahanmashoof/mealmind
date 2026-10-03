@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Trash2 } from "lucide-react";
+import { deleteRecipe } from "@/lib/api/recipes";
 
 export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   const [confirming, setConfirming] = useState(false);
@@ -13,7 +14,7 @@ export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
 
   async function handleDelete() {
     try {
-      await authFetch(`/recipes/${recipeId}`, { method: "DELETE" });
+      await deleteRecipe(authFetch, recipeId);
       router.push("/");
     } catch {
       setError("Couldn't delete this recipe. It may not be yours to delete.");
