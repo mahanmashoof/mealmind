@@ -69,10 +69,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient<IAiClient, OpenAiClient>();
 builder.Services.AddScoped<IWeeklyPlanService, WeeklyPlanService>();
 builder.Services.AddHostedService<PrepReminderBgService>();
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins("http://localhost:3000", "https://mymealmind.vercel.app")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
@@ -109,8 +110,11 @@ app.UseExceptionHandler(errorApp =>
 
 //if (app.Environment.IsDevelopment())
 //{
-app.UseSwagger();
-app.UseSwaggerUI();
+if (builder.Configuration.GetValue<bool>("EnableSwagger"))
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 //}
 
 app.UseHttpsRedirection();
