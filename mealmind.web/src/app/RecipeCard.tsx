@@ -18,7 +18,13 @@ const DAYS = [
 ];
 const SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
-export default function RecipeCard({ recipe }: { recipe: Recipe }) {
+export default function RecipeCard({
+  recipe,
+  view = "list",
+}: {
+  recipe: Recipe;
+  view?: "list" | "grid";
+}) {
   const { userId, authFetch } = useAuth();
   const [adding, setAdding] = useState(false);
   const [day, setDay] = useState(DAYS[0]);
@@ -47,6 +53,33 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
     } catch {
       setStatus("error");
     }
+  }
+
+  if (view === "grid") {
+    return (
+      <li
+        className="relative bg-surface border border-stone rounded-b-lg shadow-sm overflow-hidden"
+        style={{ borderTop: "2px dashed var(--color-stone)" }}
+      >
+        {recipe.imageUrl ? (
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.name}
+            className="w-full h-28 object-cover"
+          />
+        ) : (
+          <div className="w-full h-28 bg-stone/20" />
+        )}
+        <Link href={`/recipes/${recipe.id}`} className="block p-3">
+          <p className="font-display uppercase text-sm text-ink truncate">
+            {recipe.name}
+          </p>
+          <p className="font-mono text-xs text-basil mt-1">
+            {recipe.nutrition.calories} cal
+          </p>
+        </Link>
+      </li>
+    );
   }
 
   return (
