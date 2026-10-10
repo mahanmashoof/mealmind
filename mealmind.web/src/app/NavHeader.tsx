@@ -12,12 +12,13 @@ import {
   SunMedium,
   Menu,
   X,
+  CirclePlus,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
 
 export default function NavHeader() {
-  const { token, email, logout } = useAuth();
+  const { token, email, logout, initialized } = useAuth();
   const { dark, toggle } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -38,6 +39,15 @@ export default function NavHeader() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-4 text-sm">
+          {token && (
+            <Link
+              href="/recipes/new"
+              onClick={closeMenu}
+              className="flex items-center gap-1"
+            >
+              <CirclePlus size={16} /> New Recipe
+            </Link>
+          )}
           <Link href="/plan" className="flex items-center gap-1">
             <CalendarDays size={16} /> Plan
           </Link>
@@ -52,7 +62,9 @@ export default function NavHeader() {
           <button onClick={toggle} aria-label="Toggle dark mode">
             {dark ? <SunMedium size={16} /> : <Moon size={16} />}
           </button>
-          {token ? (
+          {!initialized ? (
+            <span className="w-16" /> // reserves space, avoids layout shift
+          ) : token ? (
             <>
               <span className="text-parchment/60 text-xs">{email}</span>
               <button
@@ -82,6 +94,15 @@ export default function NavHeader() {
       {/* Mobile menu */}
       {open && (
         <nav className="md:hidden flex flex-col gap-3 pt-4 pb-1 text-sm animate-fade-in">
+          {token && (
+            <Link
+              href="/recipes/new"
+              onClick={closeMenu}
+              className="flex items-center gap-2"
+            >
+              <CirclePlus size={16} /> New Recipe
+            </Link>
+          )}
           <Link
             href="/plan"
             onClick={closeMenu}

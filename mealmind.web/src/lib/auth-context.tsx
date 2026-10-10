@@ -15,6 +15,7 @@ interface AuthContextType {
   token: string | null;
   email: string | null;
   userId: string | null;
+  initialized: boolean;
   login: (token: string) => void;
   logout: () => void;
   authFetch: <T>(path: string, options?: RequestInit) => Promise<T>;
@@ -22,23 +23,41 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+export function AuthProvider({
+  children,
+  initialToken = null,
+}: {
+  children: ReactNode;
+  initialToken?: string | null;
+}) {
+  const initialDecoded = initialToken ? decodeToken(initialToken) : null;
+  const [token, setToken] = useState<string | null>(initialToken);
+  const [email, setEmail] = useState<string | null>(
+    initialDecoded?.email ?? null,
+  );
+  const [userId, setUserId] = useState<string | null>(
+    initialDecoded?.sub ?? null,
+  );
+  const [initialized, setInitialized] = useState(initialToken !== undefined);
+  const router = useRouter();
 
   useEffect(() => {
-    const stored = localStorage.getItem("mealmind_token");
-    setToken(stored);
-    if (stored) {
-      const decoded = decodeToken(stored);
-      setEmail(decoded?.email ?? null);
-      setUserId(decoded?.sub ?? null);
+    // Only needed as a fallback if no cookie was present but localStorage has a stale one
+    if (!initialToken) {
+      const stored = localStorage.getItem("mealmind_token");
+      if (stored) {
+        setToken(stored);
+        const decoded = decodeToken(stored);
+        setEmail(decoded?.email ?? null);
+        setUserId(decoded?.sub ?? null);
+      }
     }
+    setInitialized(true);
   }, []);
 
   const login = (newToken: string) => {
     localStorage.setItem("mealmind_token", newToken);
+    document.cookie = `mealmind_token=${newToken}; path=/; max-age=7200; SameSite=Lax`;
     setToken(newToken);
     const decoded = decodeToken(newToken);
     setEmail(decoded?.email ?? null);
@@ -47,13 +66,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem("mealmind_token");
+    document.cookie = "mealmind_token=; path=/; max-age=0";
     setToken(null);
     setEmail(null);
     setUserId(null);
     router.push("/");
   };
-
-  const router = useRouter();
 
   async function authFetch<T>(path: string, options?: RequestInit): Promise<T> {
     try {
@@ -69,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, email, userId, login, logout, authFetch }}
+      value={{ token, email, userId, initialized, login, logout, authFetch }}
     >
       {children}
     </AuthContext.Provider>

@@ -3,6 +3,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 import NavHeader from "./NavHeader";
 import { ThemeProvider } from "@/lib/theme-context";
+import { cookies } from "next/headers";
 
 const anton = Anton({
   weight: "400",
@@ -16,11 +17,14 @@ const mono = IBM_Plex_Mono({
   variable: "--font-mono",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const initialToken = cookieStore.get("mealmind_token")?.value ?? null;
+
   return (
     <html
       lang="en"
@@ -28,7 +32,7 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <AuthProvider>
+          <AuthProvider initialToken={initialToken}>
             <div className="min-h-screen flex flex-col">
               <NavHeader />
               <div className="flex-1">{children}</div>
