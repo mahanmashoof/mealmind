@@ -103,4 +103,12 @@ public class RecipesController : ControllerBase
         var recipe = await _recipeService.CreateFromAiAsync(prompt, CurrentUserId);
         return CreatedAtAction(nameof(GetById), new { id = recipe.Id }, recipe);
     }
+
+    [HttpPost("import-image")]
+    [Authorize]
+    public async Task<IActionResult> ImportFromImage(IFormFile image)
+    {
+        var recipe = await _recipeService.CreateFromImageAsync(image, CurrentUserId);
+        return CreatedAtAction(nameof(GetById), new { id = recipe.Id }, recipe);
+    }
 }

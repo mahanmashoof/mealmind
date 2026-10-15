@@ -15,6 +15,7 @@ public interface IRecipeService
     Task<RecipeOpResult> UpdateAsync(int id, Recipe updated, string userId);
     Task<RecipeOpResult> DeleteAsync(int id, string userId);
     Task<Recipe> CreateFromAiAsync(string userPrompt, string userId);
+    Task<Recipe> CreateFromImageAsync(IFormFile image, string userId);
 }
 
 public class RecipeService : IRecipeService
@@ -86,6 +87,47 @@ public class RecipeService : IRecipeService
             $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
 
         var json = await _aiClient.GetJsonCompletionAsync(systemPrompt);
+        var draft = System.Text.Json.JsonSerializer.Deserialize<AiRecipeDraft>(json,
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+            ?? throw new InvalidOperationException("AI returned invalid recipe data");
+
+        var recipe = new Recipe
+        {
+            Name = draft.Name,
+            Portions = draft.Portions,
+            Ingredients = draft.Ingredients,
+            Steps = draft.Steps,
+            Nutrition = draft.Nutrition,
+            UserId = userId
+        };
+
+        _context.Recipes.Add(recipe);
+        await _context.SaveChangesAsync();
+        return recipe;
+    }
+
+    public async Task<Recipe> CreateFromImageAsync(IFormFile image, string userId)
+    {
+        using var ms = new MemoryStream();
+        await image.CopyToAsync(ms);
+        var imageBytes = ms.ToArray();
+
+        var schemaExample = new
+        {
+            name = "string",
+            portions = 0,
+            ingredients = new[] { new { name = "string", quantity = 0.0, unit = "string" } },
+            steps = new[] { "string" },
+            nutrition = new { calories = 0, proteinGrams = 0, carbsGrams = 0, fatGrams = 0 }
+        };
+        var schemaJson = System.Text.Json.JsonSerializer.Serialize(schemaExample);
+
+        var prompt =
+            "This image shows a recipe (from a cookbook page, handwritten note, or similar). " +
+            "Read it carefully and transcribe it faithfully — do not invent ingredients or steps that aren't shown or implied. " +
+            $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
+
+        var json = await _aiClient.GetJsonCompletionFromImageAsync(prompt, imageBytes, image.ContentType);
         var draft = System.Text.Json.JsonSerializer.Deserialize<AiRecipeDraft>(json,
             new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidOperationException("AI returned invalid recipe data");

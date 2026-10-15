@@ -45,7 +45,7 @@ public class PrepReminderBgService : BackgroundService
                 var alreadyReminded = await context.Reminders.AnyAsync(r =>
                     r.UserId == plan.UserId &&
                     r.Message.Contains(entry.Recipe!.Name) &&
-                    r.CreatedAt.Date == DateTime.Today);
+                    r.CreatedAt.Date == DateTime.UtcNow.Date);
 
                 if (!alreadyReminded)
                 {

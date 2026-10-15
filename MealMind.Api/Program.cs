@@ -88,6 +88,11 @@ builder.Services.AddSingleton(sp =>
     return new Cloudinary(account);
 });
 
+builder.Services.Configure<HostOptions>(options =>
+{
+    options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+});
+
 var app = builder.Build();
 
 //migrate the database automatically

@@ -47,6 +47,36 @@ public class OpenAiClient : IAiClient
         return result?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty;
     }
 
+    public async Task<string> GetJsonCompletionFromImageAsync(string prompt, byte[] imageBytes, string mimeType)
+    {
+        var base64Image = Convert.ToBase64String(imageBytes);
+        var dataUrl = $"data:{mimeType};base64,{base64Image}";
+
+        var request = new
+        {
+            model = "gpt-4o-mini",
+            messages = new object[]
+            {
+            new
+            {
+                role = "user",
+                content = new object[]
+                {
+                    new { type = "text", text = prompt },
+                    new { type = "image_url", image_url = new { url = dataUrl } }
+                }
+            }
+            },
+            response_format = new { type = "json_object" }
+        };
+
+        var response = await _httpClient.PostAsJsonAsync("chat/completions", request);
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<OpenAiResponse>();
+        return result?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty;
+    }
+
     private class OpenAiResponse
     {
         [JsonPropertyName("choices")]
