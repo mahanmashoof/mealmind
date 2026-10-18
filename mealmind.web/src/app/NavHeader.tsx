@@ -16,8 +16,11 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function NavHeader() {
+  const t = useTranslations("nav");
   const { token, email, logout, initialized } = useAuth();
   const { dark, toggle } = useTheme();
   const [open, setOpen] = useState(false);
@@ -45,23 +48,24 @@ export default function NavHeader() {
               onClick={closeMenu}
               className="flex items-center gap-1"
             >
-              <CirclePlus size={16} /> New Recipe
+              <CirclePlus size={16} /> {t("newRecipe")}
             </Link>
           )}
           <Link href="/plan" className="flex items-center gap-1">
-            <CalendarDays size={16} /> Plan
+            <CalendarDays size={16} /> {t("plan")}
           </Link>
           <Link href="/recipes/ai-generate" className="flex items-center gap-1">
-            <Sparkles size={16} /> Ask AI
+            <Sparkles size={16} /> {t("askAi")}
           </Link>
           {token && (
             <Link href="/reminders" className="flex items-center gap-1">
-              <Bell size={16} /> Reminders
+              <Bell size={16} /> {t("reminders")}
             </Link>
           )}
           <button onClick={toggle} aria-label="Toggle dark mode">
             {dark ? <SunMedium size={16} /> : <Moon size={16} />}
           </button>
+          <LanguageSwitcher />
           {!initialized ? (
             <span className="w-16" /> // reserves space, avoids layout shift
           ) : token ? (
@@ -71,12 +75,12 @@ export default function NavHeader() {
                 onClick={logout}
                 className="text-butter flex items-center gap-1"
               >
-                <LogOut size={16} /> Log out
+                <LogOut size={16} /> {t("logOut")}
               </button>
             </>
           ) : (
             <Link href="/login" className="text-butter flex items-center gap-1">
-              <LogIn size={16} /> Log in
+              <LogIn size={16} /> {t("logIn")}
             </Link>
           )}
         </nav>
@@ -100,7 +104,7 @@ export default function NavHeader() {
               onClick={closeMenu}
               className="flex items-center gap-2"
             >
-              <CirclePlus size={16} /> New Recipe
+              <CirclePlus size={16} /> {t("newRecipe")}
             </Link>
           )}
           <Link
@@ -108,14 +112,14 @@ export default function NavHeader() {
             onClick={closeMenu}
             className="flex items-center gap-2"
           >
-            <CalendarDays size={16} /> Plan
+            <CalendarDays size={16} /> {t("plan")}
           </Link>
           <Link
             href="/recipes/ai-generate"
             onClick={closeMenu}
             className="flex items-center gap-2"
           >
-            <Sparkles size={16} /> Ask AI
+            <Sparkles size={16} /> {t("askAi")}
           </Link>
           {token && (
             <Link
@@ -123,13 +127,14 @@ export default function NavHeader() {
               onClick={closeMenu}
               className="flex items-center gap-2"
             >
-              <Bell size={16} /> Reminders
+              <Bell size={16} /> {t("reminders")}
             </Link>
           )}
           <button onClick={toggle} className="flex items-center gap-2">
             {dark ? <SunMedium size={16} /> : <Moon size={16} />}{" "}
             {dark ? "Light mode" : "Dark mode"}
           </button>
+          <LanguageSwitcher />
           {token ? (
             <>
               <span className="text-parchment/60 text-xs">{email}</span>
@@ -140,7 +145,7 @@ export default function NavHeader() {
                 }}
                 className="text-butter flex items-center gap-2"
               >
-                <LogOut size={16} /> Log out
+                <LogOut size={16} /> {t("logOut")}
               </button>
             </>
           ) : (
@@ -149,7 +154,7 @@ export default function NavHeader() {
               onClick={closeMenu}
               className="text-butter flex items-center gap-2"
             >
-              <LogIn size={16} /> Log in
+              <LogIn size={16} /> {t("logIn")}
             </Link>
           )}
         </nav>

@@ -4,6 +4,8 @@ import "./globals.css";
 import NavHeader from "./NavHeader";
 import { ThemeProvider } from "@/lib/theme-context";
 import { cookies } from "next/headers";
+import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 const anton = Anton({
   weight: "400",
@@ -24,6 +26,7 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies();
   const initialToken = cookieStore.get("mealmind_token")?.value ?? null;
+  const messages = await getMessages();
 
   return (
     <html
@@ -31,14 +34,16 @@ export default async function RootLayout({
       className={`${anton.variable} ${lora.variable} ${mono.variable}`}
     >
       <body>
-        <ThemeProvider>
-          <AuthProvider initialToken={initialToken}>
-            <div className="min-h-screen flex flex-col">
-              <NavHeader />
-              <div className="flex-1">{children}</div>
-            </div>
-          </AuthProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider>
+            <AuthProvider initialToken={initialToken}>
+              <div className="min-h-screen flex flex-col">
+                <NavHeader />
+                <div className="flex-1">{children}</div>
+              </div>
+            </AuthProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

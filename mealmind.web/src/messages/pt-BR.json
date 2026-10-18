@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "plan": "Plano",
+    "askAi": "Perguntar à IA",
+    "newRecipe": "Nova Receita",
+    "reminders": "Lembretes",
+    "logIn": "Entrar",
+    "logOut": "Sair"
+  }
+}

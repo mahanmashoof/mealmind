@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "plan": "Plan",
+    "askAi": "Fråga AI",
+    "newRecipe": "Nytt recept",
+    "reminders": "Påminnelser",
+    "logIn": "Logga in",
+    "logOut": "Logga ut"
+  }
+}
