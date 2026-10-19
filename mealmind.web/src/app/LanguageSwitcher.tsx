@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 const LOCALES = [
   { code: "en", label: "EN" },
@@ -10,6 +11,7 @@ const LOCALES = [
 
 export default function LanguageSwitcher() {
   const router = useRouter();
+  const locale = useLocale();
 
   function setLocale(code: string) {
     document.cookie = `mealmind_locale=${code}; path=/; max-age=31536000`;
@@ -18,13 +20,10 @@ export default function LanguageSwitcher() {
 
   return (
     <select
+      value={locale}
       onChange={(e) => setLocale(e.target.value)}
-      className="bg-transparent text-xs border border-parchment/30 rounded px-1"
-      defaultValue=""
+      className="bg-ink text-parchment text-xs border border-parchment/40 rounded px-1 py-0.5"
     >
-      <option value="" disabled>
-        Lang
-      </option>
       {LOCALES.map((l) => (
         <option key={l.code} value={l.code}>
           {l.label}
