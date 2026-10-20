@@ -11,6 +11,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import RecipeCard from "./RecipeCard";
 import { Recipe } from "@/types/recipe";
+import { useTranslations } from "next-intl";
 
 const PAGE_SIZE = 9;
 
@@ -24,6 +25,8 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
   const [view, setView] = useState<"list" | "grid">("list");
   const [page, setPage] = useState(1);
   const [desc, setDesc] = useState(false);
+
+  const t = useTranslations("home");
 
   const filtered = useMemo(() => {
     let result = recipes;
@@ -58,7 +61,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
         <div className="flex items-center gap-2 border border-stone rounded px-3 py-2 bg-surface flex-1">
           <Search size={16} className="text-ink/40" />
           <input
-            placeholder="Search recipes..."
+            placeholder={t("searchPlaceholder")}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -73,9 +76,9 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
           onChange={(e) => setSort(e.target.value as SortKey)}
           className="border border-stone rounded px-2 py-2 bg-surface text-sm"
         >
-          <option value="name">Name</option>
-          <option value="calories">Calories</option>
-          <option value="portions">Portions</option>
+          <option value="name">{t("sortName")}</option>
+          <option value="calories">{t("sortCalories")}</option>
+          <option value="portions">{t("sortPortions")}</option>
         </select>
 
         <button
@@ -96,7 +99,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
                 setPage(1);
               }}
             />
-            Mine only
+            {t("mineOnly")}
           </label>
         )}
 
@@ -119,9 +122,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
       </div>
 
       {pageItems.length === 0 ? (
-        <p className="text-ink/60 text-center py-10">
-          No recipes match your search.
-        </p>
+        <p className="text-ink/60 text-center py-10">{t("noResults")}</p>
       ) : (
         <ul
           className={
@@ -143,7 +144,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
             disabled={page_ === 1}
             className="disabled:opacity-30"
           >
-            Prev
+            {t("prev")}
           </button>
           <span className="text-ink/60">
             {page_} / {totalPages}
@@ -153,7 +154,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
             disabled={page_ === totalPages}
             className="disabled:opacity-30"
           >
-            Next
+            {t("next")}
           </button>
         </div>
       )}

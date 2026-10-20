@@ -6,5 +6,22 @@
     "reminders": "Reminders",
     "logIn": "Log in",
     "logOut": "Log out"
+  },
+  "home": {
+    "title": "Recipes",
+    "emptyTitle": "No recipes yet — add one to get started.",
+    "createButton": "Create a recipe",
+    "searchPlaceholder": "Search recipes...",
+    "sortName": "Name",
+    "sortCalories": "Calories",
+    "sortPortions": "Portions",
+    "mineOnly": "Mine only",
+    "noResults": "No recipes match your search.",
+    "prev": "Prev",
+    "next": "Next",
+    "calories": "cal",
+    "portions": "portions",
+    "edit": "Edit",
+    "addToPlan": "Add to plan"
   }
 }

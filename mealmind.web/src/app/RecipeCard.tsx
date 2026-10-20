@@ -6,6 +6,7 @@ import { Pencil, CalendarPlus, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Recipe } from "@/types/recipe";
 import { assignRecipe, listPlans } from "@/lib/api/plans";
+import { useTranslations } from "next-intl";
 
 const DAYS = [
   "Monday",
@@ -34,6 +35,7 @@ export default function RecipeCard({
   );
 
   const isOwner = userId === recipe.userId;
+  const t = useTranslations("home");
 
   async function handleAdd() {
     setStatus("saving");
@@ -75,7 +77,7 @@ export default function RecipeCard({
             {recipe.name}
           </p>
           <p className="font-mono text-xs text-basil mt-1">
-            {recipe.nutrition.calories} cal
+            {recipe.nutrition.calories} {t("calories")}
           </p>
         </Link>
       </li>
@@ -95,7 +97,7 @@ export default function RecipeCard({
             {recipe.name}
           </p>
           <p className="font-mono text-xs text-basil mt-1">
-            {recipe.nutrition.calories} cal · {recipe.portions} portions
+            {recipe.nutrition.calories} cal · {recipe.portions} {t("portions")}
           </p>
         </Link>
 
@@ -104,7 +106,7 @@ export default function RecipeCard({
             href={`/recipes/${recipe.id}/edit`}
             className="text-xs text-basil hover:underline flex items-center gap-1 mt-2"
           >
-            <Pencil size={12} /> Edit
+            <Pencil size={12} /> {t("edit")}
           </Link>
         )}
       </div>
@@ -165,9 +167,7 @@ export default function RecipeCard({
             </div>
           )}
           {status === "error" && (
-            <p className="text-xs text-red-600 mt-1">
-              No weekly plan yet — create one on /plan first.
-            </p>
+            <p className="text-xs text-red-600 mt-1">{t("emptyTitle ")}</p>
           )}
         </div>
       )}

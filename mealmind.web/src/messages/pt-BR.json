@@ -6,5 +6,22 @@
     "reminders": "Lembretes",
     "logIn": "Entrar",
     "logOut": "Sair"
+  },
+  "home": {
+    "title": "Receitas",
+    "emptyTitle": "Ainda sem receitas — adicione uma para começar.",
+    "createButton": "Criar uma receita",
+    "searchPlaceholder": "Buscar receitas...",
+    "sortName": "Nome",
+    "sortCalories": "Calorias",
+    "sortPortions": "Porções",
+    "mineOnly": "Só as minhas",
+    "noResults": "Nenhuma receita encontrada.",
+    "prev": "Anterior",
+    "next": "Próximo",
+    "calories": "kcal",
+    "portions": "porções",
+    "edit": "Editar",
+    "addToPlan": "Adicionar ao plano"
   }
 }

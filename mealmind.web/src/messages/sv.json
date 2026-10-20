@@ -6,5 +6,22 @@
     "reminders": "Påminnelser",
     "logIn": "Logga in",
     "logOut": "Logga ut"
+  },
+  "home": {
+    "title": "Recept",
+    "emptyTitle": "Inga recept än — lägg till ett för att komma igång.",
+    "createButton": "Skapa ett recept",
+    "searchPlaceholder": "Sök recept...",
+    "sortName": "Namn",
+    "sortCalories": "Kalorier",
+    "sortPortions": "Portioner",
+    "mineOnly": "Bara mina",
+    "noResults": "Inga recept matchar din sökning.",
+    "prev": "Föreg",
+    "next": "Nästa",
+    "calories": "kcal",
+    "portions": "portioner",
+    "edit": "Redigera",
+    "addToPlan": "Lägg till i plan"
   }
 }
