@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "next-intl";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,6 +12,7 @@ export default function ImageUpload({ recipeId }: { recipeId: number }) {
   const [error, setError] = useState("");
   const { token } = useAuth();
   const router = useRouter();
+  const t = useTranslations("recipeDetail");
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -31,7 +33,7 @@ export default function ImageUpload({ recipeId }: { recipeId: number }) {
       if (!res.ok) throw new Error();
       router.refresh();
     } catch {
-      setError("Couldn't upload image.");
+      setError(t("errorUpload"));
     } finally {
       setUploading(false);
     }
@@ -40,7 +42,7 @@ export default function ImageUpload({ recipeId }: { recipeId: number }) {
   return (
     <div className="text-xs">
       <label className="text-basil cursor-pointer hover:underline">
-        {uploading ? "Uploading..." : "Upload photo"}
+        {uploading ? t("uploading") : t("uploadPhoto")}
         <input
           type="file"
           accept="image/*"

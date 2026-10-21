@@ -5,19 +5,21 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Trash2 } from "lucide-react";
 import { deleteRecipe } from "@/lib/api/recipes";
+import { useTranslations } from "next-intl";
 
 export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   const [confirming, setConfirming] = useState(false);
   const router = useRouter();
   const { authFetch } = useAuth();
   const [error, setError] = useState("");
+  const t = useTranslations("recipeDetail");
 
   async function handleDelete() {
     try {
       await deleteRecipe(authFetch, recipeId);
       router.push("/");
     } catch {
-      setError("Couldn't delete this recipe. It may not be yours to delete.");
+      setError(t("errorDelete"));
     }
   }
 
@@ -25,7 +27,7 @@ export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
     return (
       <span className="text-xs flex flex-col gap-1">
         <span className="text-xs flex items-center gap-2">
-          Delete this recipe?
+          {t("deleteConfirm")}
           <button onClick={handleDelete} className="text-red-600 font-medium">
             Yes
           </button>
@@ -43,7 +45,7 @@ export default function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
       onClick={() => setConfirming(true)}
       className="text-xs text-ink/40 hover:text-red-600 flex items-center gap-1"
     >
-      <Trash2 size={12} /> Delete recipe
+      <Trash2 size={12} /> {t("deleteRecipe")}
     </button>
   );
 }

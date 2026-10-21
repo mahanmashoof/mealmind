@@ -23,5 +23,89 @@
     "portions": "porções",
     "edit": "Editar",
     "addToPlan": "Adicionar ao plano"
+  },
+  "plan": {
+    "title": "Esta Semana",
+    "noPlan": "Ainda sem plano semanal.",
+    "startButton": "Iniciar o plano da semana",
+    "creating": "Criando...",
+    "deletePlan": "Excluir plano",
+    "deleteConfirm": "Excluir o plano desta semana?",
+    "yes": "Sim",
+    "cancel": "Cancelar",
+    "generatePrep": "Gerar plano de preparo",
+    "thinking": "Pensando...",
+    "prepError": "Não foi possível gerar um plano de preparo. Garanta que a semana tenha pelo menos uma refeição atribuída.",
+    "assign": "+ atribuir",
+    "chooseRecipe": "Escolha uma receita...",
+    "breakfast": "Café da manhã", "lunch": "Almoço", "dinner": "Jantar", "snack": "Lanche",
+    "monday": "Segunda", "tuesday": "Terça", "wednesday": "Quarta", "thursday": "Quinta",
+    "friday": "Sexta", "saturday": "Sábado", "sunday": "Domingo"
+  },
+  "recipeForm": {
+    "newTitle": "Nova Receita",
+    "editTitle": "Editar Receita",
+    "namePlaceholder": "Nome da receita *",
+    "portions": "Porções",
+    "ingredients": "Ingredientes",
+    "ingredientName": "Nome",
+    "qty": "Qtd",
+    "unit": "Unidade",
+    "addIngredient": "adicionar ingrediente",
+    "steps": "Passos",
+    "stepPlaceholder": "Passo",
+    "addStep": "adicionar passo",
+    "nutrition": "Nutrição",
+    "create": "Criar Receita",
+    "save": "Salvar Alterações",
+    "loading": "Carregando...",
+    "errorName": "A receita precisa de um nome.",
+    "errorPortions": "As porções devem ser pelo menos 1.",
+    "errorSteps": "Adicione pelo menos um passo.",
+    "errorCreate": "Não foi possível criar a receita. Verifique os campos e tente novamente.",
+    "errorSave": "Não foi possível salvar as alterações. Pode não ser sua receita para editar."
+  },
+  "recipeDetail": {
+    "deleteRecipe": "Excluir receita",
+    "deleteConfirm": "Excluir esta receita?",
+    "errorDelete": "Não foi possível excluir esta receita. Pode não ser sua para excluir.",
+    "uploadPhoto": "Enviar foto",
+    "uploading": "Enviando...",
+    "errorUpload": "Não foi possível enviar a imagem.",
+    "notFound": "Receita não encontrada."
+  },
+  "auth": {
+    "loginTitle": "Entrar",
+    "registerTitle": "Registrar",
+    "email": "E-mail",
+    "password": "Senha",
+    "loginButton": "Entrar",
+    "registerButton": "Criar conta",
+    "errorLogin": "E-mail ou senha inválidos",
+    "errorRegister": "Não foi possível criar a conta. Tente outro e-mail ou uma senha mais forte.",
+    "successRegister": "Conta criada — redirecionando para o login...",
+    "noAccount": "Não tem conta?",
+    "registerHere": "Registre-se aqui",
+    "haveAccount": "Já tem uma conta?",
+    "loginHere": "Entre aqui",
+    "errorEmail": "Digite um e-mail válido.",
+    "errorPassword": "A senha deve ter pelo menos 6 caracteres."
+  },
+  "aiGenerate": {
+    "title": "Pedir uma receita à IA",
+    "placeholder": "ex. bowl de fajita de frango com arroz",
+    "generating": "Criando ideias...",
+    "generate": "Gerar"
+  },
+  "import": {
+    "title": "Importar Receita de Foto",
+    "importing": "Lendo a receita...",
+    "importButton": "Importar",
+    "errorImport": "Não foi possível ler uma receita nessa imagem. Tente uma foto mais nítida."
+  },
+  "reminders": {
+    "title": "Lembretes",
+    "empty": "Ainda sem lembretes — eles aparecerão aqui na noite anterior a uma refeição planejada.",
+    "markRead": "Marcar como lido"
   }
 }

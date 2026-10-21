@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+import { useTranslations } from "next-intl";
 import RecipeOwnerActions from "./RecipeOwnerActions";
 import { getRecipe } from "@/lib/api/recipes";
 
@@ -9,6 +10,7 @@ export default async function RecipeDetailPage({
 }) {
   const { id } = await params;
   const recipe = await getRecipe(id);
+  const t = useTranslations("recipeDetail");
 
   return (
     <main className="px-4 py-6 bg-gray-50">
@@ -25,7 +27,7 @@ export default async function RecipeDetailPage({
       <p className="text-sm text-gray-500 mb-4">
         {recipe.portions} portions · {recipe.nutrition.calories} cal
       </p>
-      <h2 className="font-semibold mt-4 mb-1">Ingredients</h2>
+      <h2 className="font-semibold mt-4 mb-1">{t("ingredients")}</h2>
       <ul className="font-mono text-sm flex flex-col gap-1">
         {recipe.ingredients.map((i, idx) => (
           <li key={idx} className="flex items-baseline gap-2">
@@ -37,7 +39,7 @@ export default async function RecipeDetailPage({
           </li>
         ))}
       </ul>
-      <h2 className="font-semibold mt-4 mb-1">Steps</h2>
+      <h2 className="font-semibold mt-4 mb-1">{t("steps")}</h2>
       <ol className="text-sm text-gray-700 list-decimal list-inside flex flex-col gap-1">
         {recipe.steps.map((step, idx) => (
           <li key={idx}>{step}</li>

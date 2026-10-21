@@ -23,5 +23,90 @@
     "portions": "portioner",
     "edit": "Redigera",
     "addToPlan": "Lägg till i plan"
+  },
+  "plan": {
+    "title": "Den här veckan",
+    "noPlan": "Ingen veckoplan än.",
+    "startButton": "Starta veckans plan",
+    "creating": "Skapar...",
+    "deletePlan": "Ta bort plan",
+    "deleteConfirm": "Ta bort veckans plan?",
+    "yes": "Ja",
+    "cancel": "Avbryt",
+    "generatePrep": "Skapa förberedelseplan",
+    "thinking": "Tänker...",
+    "prepError": "Kunde inte skapa en förberedelseplan. Se till att veckan har minst en måltid tillagd.",
+    "assign": "+ tilldela",
+    "chooseRecipe": "Välj ett recept...",
+    "breakfast": "Frukost", "lunch": "Lunch", "dinner": "Middag", "snack": "Mellanmål",
+    "monday": "Måndag", "tuesday": "Tisdag", "wednesday": "Onsdag", "thursday": "Torsdag",
+    "friday": "Fredag", "saturday": "Lördag", "sunday": "Söndag"
+  },
+  "recipeForm": {
+    "newTitle": "Nytt recept",
+    "editTitle": "Redigera recept",
+    "namePlaceholder": "Receptnamn *",
+    "portions": "Portioner",
+    "ingredients": "Ingredienser",
+    "ingredientName": "Namn",
+    "qty": "Antal",
+    "unit": "Enhet",
+    "addIngredient": "lägg till ingrediens",
+    "steps": "Steg",
+    "stepPlaceholder": "Steg",
+    "addStep": "lägg till steg",
+    "nutrition": "Näringsvärde",
+    "create": "Skapa recept",
+    "save": "Spara ändringar",
+    "loading": "Laddar...",
+    "errorName": "Receptet behöver ett namn.",
+    "errorPortions": "Portioner måste vara minst 1.",
+    "errorSteps": "Lägg till minst ett steg.",
+    "errorCreate": "Kunde inte skapa receptet. Kontrollera fälten och försök igen.",
+    "errorSave": "Kunde inte spara ändringarna. Det kanske inte är ditt recept att redigera."
+  },
+  "recipeDetail": {
+    "deleteRecipe": "Ta bort recept",
+    "deleteConfirm": "Ta bort det här receptet?",
+    "errorDelete": "Kunde inte ta bort receptet. Det kanske inte är ditt att ta bort.",
+    "uploadPhoto": "Ladda upp foto",
+    "uploading": "Laddar upp...",
+    "errorUpload": "Kunde inte ladda upp bilden.",
+    "notFound": "Receptet hittades inte."
+  },
+  "auth": {
+    "loginTitle": "Logga in",
+    "registerTitle": "Registrera",
+    "email": "E-post",
+    "password": "Lösenord",
+    "loginButton": "Logga in",
+    "registerButton": "Skapa konto",
+    "errorLogin": "Fel e-post eller lösenord",
+    "errorRegister": "Kunde inte skapa konto. Prova en annan e-post eller ett starkare lösenord.",
+    "successRegister": "Konto skapat — omdirigerar till inloggning...",
+    "noAccount": "Inget konto?",
+    "registerHere": "Registrera dig här",
+    "haveAccount": "Har du redan ett konto?",
+    "loginHere": "Logga in här",
+    "errorEmail": "Ange en giltig e-postadress.",
+    "errorPassword": "Lösenordet måste vara minst 6 tecken."
+  },
+  "aiGenerate": {
+    "title": "Fråga AI:n om ett recept",
+    "placeholder": "t.ex. kycklingfajitabowl med ris",
+    "generating": "Hittar på idéer...",
+    "generate": "Skapa"
+  },
+  "import": {
+    "title": "Importera recept från foto",
+    "importing": "Läser receptet...",
+    "importButton": "Importera",
+    "errorImport": "Kunde inte läsa ett recept från bilden. Prova ett tydligare foto."
+  },
+  "reminders": {
+    "title": "Påminnelser",
+    "empty": "Inga påminnelser än — de dyker upp kvällen innan en planerad måltid.",
+    "markRead": "Markera som läst"
   }
+
 }

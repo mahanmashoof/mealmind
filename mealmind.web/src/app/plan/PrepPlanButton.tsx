@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary } from "@/lib/styles";
 import { getPrepPlan } from "@/lib/api/plans";
+import { useTranslations } from "next-intl";
 
 export default function PrepPlanButton({ planId }: { planId: number }) {
   const [tasks, setTasks] = useState<string[] | null>(null);
   const [loading, setLoading] = useState(false);
   const { authFetch } = useAuth();
   const [error, setError] = useState("");
+  const t = useTranslations("plan");
 
   async function generate() {
     setLoading(true);
@@ -32,7 +34,7 @@ export default function PrepPlanButton({ planId }: { planId: number }) {
           className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
           onClick={generate}
         >
-          {loading ? "Thinking..." : "Generate prep plan"}
+          {loading ? t("thinking") : t("generatePrep")}
         </button>
         {error && <p className="text-red-600 text-xs">{error}</p>}
       </div>

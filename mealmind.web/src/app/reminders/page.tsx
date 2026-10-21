@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "next-intl";
 
 interface Reminder {
   id: number;
@@ -14,6 +15,8 @@ export default function RemindersPage() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
   const { authFetch } = useAuth();
+  const t = useTranslations("recipeForm");
+  const rt = useTranslations("reminders");
 
   useEffect(() => {
     authFetch<Reminder[]>("/reminders")
@@ -28,19 +31,16 @@ export default function RemindersPage() {
     );
   }
 
-  if (loading) return <main className="px-4 py-6">Loading...</main>;
+  if (loading) return <main className="px-4 py-6">{t("loading")}</main>;
 
   return (
     <main className="px-4 py-6">
       <h1 className="font-display uppercase text-2xl text-ink tracking-wide mb-4">
-        Reminders
+        {rt("title")}
       </h1>
       {reminders.length === 0 && (
         <div className="text-center py-10">
-          <p className="text-ink/60">
-            No reminders yet — they'll show up here the night before a planned
-            meal.
-          </p>
+          <p className="text-ink/60">{rt("empty")}</p>
         </div>
       )}
       <ul className="flex flex-col gap-2">
@@ -57,7 +57,7 @@ export default function RemindersPage() {
                 onClick={() => markRead(r.id)}
                 className="text-xs text-basil hover:underline ml-3 shrink-0"
               >
-                Mark read
+                {rt("markRead")}
               </button>
             )}
           </li>

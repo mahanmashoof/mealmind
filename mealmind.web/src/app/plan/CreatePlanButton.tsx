@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary } from "@/lib/styles";
 import { createPlan } from "@/lib/api/plans";
+import { useTranslations } from "next-intl";
 
 function mondayOfThisWeek(): string {
   const d = new Date();
@@ -19,6 +20,7 @@ export default function CreatePlanButton() {
   const { authFetch } = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
+  const t = useTranslations("plan");
 
   async function create() {
     setLoading(true);
@@ -36,7 +38,7 @@ export default function CreatePlanButton() {
   return (
     <div className="flex flex-col items-center gap-2">
       <button onClick={create} disabled={loading} className={buttonPrimary}>
-        {loading ? "Creating..." : "Start this week's plan"}
+        {loading ? t("creating") : t("startButton")}
       </button>
       {error && <p className="text-red-600 text-xs">{error}</p>}
     </div>

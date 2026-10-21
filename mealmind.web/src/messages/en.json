@@ -23,5 +23,89 @@
     "portions": "portions",
     "edit": "Edit",
     "addToPlan": "Add to plan"
+  },
+  "plan": {
+    "title": "This Week",
+    "noPlan": "No weekly plan yet.",
+    "startButton": "Start this week's plan",
+    "creating": "Creating...",
+    "deletePlan": "Delete plan",
+    "deleteConfirm": "Delete this week's plan?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "generatePrep": "Generate prep plan",
+    "thinking": "Thinking...",
+    "prepError": "Couldn't generate a prep plan. Make sure this week has at least one meal assigned.",
+    "assign": "+ assign",
+    "chooseRecipe": "Choose a recipe...",
+    "breakfast": "Breakfast", "lunch": "Lunch", "dinner": "Dinner", "snack": "Snack",
+    "monday": "Monday", "tuesday": "Tuesday", "wednesday": "Wednesday", "thursday": "Thursday",
+    "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday"
+  },
+  "recipeForm": {
+    "newTitle": "New Recipe",
+    "editTitle": "Edit Recipe",
+    "namePlaceholder": "Recipe name *",
+    "portions": "Portions",
+    "ingredients": "Ingredients",
+    "ingredientName": "Name",
+    "qty": "Qty",
+    "unit": "Unit",
+    "addIngredient": "add ingredient",
+    "steps": "Steps",
+    "stepPlaceholder": "Step",
+    "addStep": "add step",
+    "nutrition": "Nutrition",
+    "create": "Create Recipe",
+    "save": "Save Changes",
+    "loading": "Loading...",
+    "errorName": "Recipe needs a name.",
+    "errorPortions": "Portions must be at least 1.",
+    "errorSteps": "Add at least one step.",
+    "errorCreate": "Couldn't create the recipe. Check the fields and try again.",
+    "errorSave": "Couldn't save changes. This may not be your recipe to edit."
+  },
+  "recipeDetail": {
+    "deleteRecipe": "Delete recipe",
+    "deleteConfirm": "Delete this recipe?",
+    "errorDelete": "Couldn't delete this recipe. It may not be yours to delete.",
+    "uploadPhoto": "Upload photo",
+    "uploading": "Uploading...",
+    "errorUpload": "Couldn't upload image.",
+    "notFound": "Recipe not found."
+  },
+  "auth": {
+    "loginTitle": "Log In",
+    "registerTitle": "Register",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Log in",
+    "registerButton": "Create account",
+    "errorLogin": "Invalid email or password",
+    "errorRegister": "Couldn't create account. Try a different email or a stronger password.",
+    "successRegister": "Account created — redirecting to login...",
+    "noAccount": "No account?",
+    "registerHere": "Register here",
+    "haveAccount": "Already have an account?",
+    "loginHere": "Log in here",
+    "errorEmail": "Enter a valid email address.",
+    "errorPassword": "Password must be at least 6 characters."
+  },
+  "aiGenerate": {
+    "title": "Ask the AI for a recipe",
+    "placeholder": "e.g. chicken fajita bowl with rice",
+    "generating": "Cooking up ideas...",
+    "generate": "Generate"
+  },
+  "import": {
+    "title": "Import Recipe from Photo",
+    "importing": "Reading recipe...",
+    "importButton": "Import",
+    "errorImport": "Couldn't read a recipe from that image. Try a clearer photo."
+  },
+  "reminders": {
+    "title": "Reminders",
+    "empty": "No reminders yet — they'll show up here the night before a planned meal.",
+    "markRead": "Mark read"
   }
 }

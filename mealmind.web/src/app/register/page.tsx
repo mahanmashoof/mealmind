@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -12,16 +13,17 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const t = useTranslations("auth");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     if (!email.includes("@")) {
-      setError("Enter a valid email address.");
+      setError(t("errorEmail"));
       return;
     }
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(t("errorPassword"));
       return;
     }
     try {
@@ -32,9 +34,7 @@ export default function RegisterPage() {
       setSuccess(true);
       setTimeout(() => router.push("/login"), 1200);
     } catch {
-      setError(
-        "Couldn't create account. Try a different email or a stronger password.",
-      );
+      setError(t("errorRegister"));
     }
   }
 
@@ -47,17 +47,15 @@ export default function RegisterPage() {
       >
         <span className="absolute -top-2 left-6 w-3 h-3 rounded-full bg-parchment border border-stone" />
         <h1 className="font-display uppercase text-2xl text-ink tracking-wide mb-2">
-          Register
+          {t("registerTitle")}
         </h1>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         {success && (
-          <p className="text-basil text-sm">
-            Account created — redirecting to login...
-          </p>
+          <p className="text-basil text-sm">{t("successRegister")}</p>
         )}
         <input
           type="email"
-          placeholder="Email *"
+          placeholder={`${t("email")} *`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-surface"
@@ -65,19 +63,19 @@ export default function RegisterPage() {
         />
         <input
           type="password"
-          placeholder="Password*"
+          placeholder={`${t("password")} *`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-surface"
           required
         />
         <button type="submit" className={buttonPrimary}>
-          Create account
+          {t("registerButton")}
         </button>
         <p className="text-xs text-ink/60 text-center mt-1">
-          Already have an account?{" "}
+          {t("haveAccount")}{" "}
           <Link href="/login" className="text-basil hover:underline">
-            Log in here
+            {t("loginHere")}
           </Link>
         </p>
       </form>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { buttonPrimary } from "@/lib/styles";
+import { useTranslations } from "next-intl";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,6 +15,7 @@ export default function ImportRecipePage() {
   const [error, setError] = useState("");
   const { token } = useAuth();
   const router = useRouter();
+  const t = useTranslations("import");
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0];
@@ -40,7 +42,7 @@ export default function ImportRecipePage() {
       const recipe = await res.json();
       router.push(`/recipes/${recipe.id}`);
     } catch {
-      setError("Couldn't read a recipe from that image. Try a clearer photo.");
+      setError(t("errorImport"));
     } finally {
       setLoading(false);
     }
@@ -48,9 +50,7 @@ export default function ImportRecipePage() {
 
   return (
     <main className="px-4 py-6">
-      <h1 className="font-display uppercase text-xl mb-4">
-        Import Recipe from Photo
-      </h1>
+      <h1 className="font-display uppercase text-xl mb-4">{t("title")}</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <input type="file" accept="image/*" onChange={handleFileChange} />
@@ -66,7 +66,7 @@ export default function ImportRecipePage() {
           disabled={!file || loading}
           className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
         >
-          {loading ? "Reading recipe..." : "Import"}
+          {loading ? t("importing") : t("importButton")}
         </button>
       </form>
     </main>

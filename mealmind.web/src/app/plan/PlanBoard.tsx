@@ -9,6 +9,7 @@ import PrepPlanButton from "./PrepPlanButton";
 import { Recipe } from "@/types/recipe";
 import { WeeklyPlan } from "@/types/plan";
 import { Coffee, Sun, Moon, Cookie } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const DAYS = [
   "Monday",
@@ -37,11 +38,12 @@ export default function PlanBoard({
 }) {
   const { userId } = useAuth();
   const plan = plans.find((p) => p.userId === userId);
+  const t = useTranslations("plan");
 
   return (
     <main className="px-4 py-6">
       <h1 className="font-display uppercase text-3xl text-ink tracking-wide mb-4">
-        This Week
+        {t("title")}
       </h1>
 
       {plan && (
@@ -55,7 +57,7 @@ export default function PlanBoard({
 
       {!plan && (
         <div className="text-center py-10">
-          <p className="text-ink/60 mb-4">No weekly plan yet.</p>
+          <p className="text-ink/60 mb-4">{t("noPlan")}</p>
           <CreatePlanButton />
         </div>
       )}
@@ -70,7 +72,7 @@ export default function PlanBoard({
             >
               <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />
               <p className="font-display uppercase tracking-wide text-basil text-lg mb-2">
-                {day}
+                {t(day.toLocaleLowerCase())}
               </p>
               <div className="flex flex-col gap-2">
                 {SLOTS.map((slot) => {
@@ -83,7 +85,7 @@ export default function PlanBoard({
                       className="flex items-baseline justify-between text-sm"
                     >
                       <span className="uppercase text-xs tracking-wide text-ink/60 flex items-center gap-1">
-                        {SLOT_ICONS[slot]} {slot}
+                        {SLOT_ICONS[slot]} {t(slot.toLocaleLowerCase())}
                       </span>
                       {entry ? (
                         <span className="flex items-center">

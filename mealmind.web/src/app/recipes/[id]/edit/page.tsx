@@ -7,6 +7,7 @@ import { buttonPrimary, buttonGhost } from "@/lib/styles";
 import { Ingredient } from "@/types/recipe";
 import { Plus } from "lucide-react";
 import { getRecipe, updateRecipe } from "@/lib/api/recipes";
+import { useTranslations } from "next-intl";
 
 export default function EditRecipePage() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +28,7 @@ export default function EditRecipePage() {
   const [error, setError] = useState("");
   const { authFetch } = useAuth();
   const router = useRouter();
+  const t = useTranslations("recipeForm");
 
   useEffect(() => {
     getRecipe(id).then((recipe) => {
@@ -62,15 +64,15 @@ export default function EditRecipePage() {
     e.preventDefault();
     setError("");
     if (!name.trim()) {
-      setError("Recipe needs a name.");
+      setError(t("errorName"));
       return;
     }
     if (portions < 1) {
-      setError("Portions must be at least 1.");
+      setError(t("errorPortions"));
       return;
     }
     if (steps.filter((s) => s.trim() !== "").length === 0) {
-      setError("Add at least one step.");
+      setError(t("errorSteps"));
       return;
     }
     try {
@@ -83,27 +85,27 @@ export default function EditRecipePage() {
       });
       router.push(`/recipes/${id}`);
     } catch {
-      setError("Couldn't save changes. This may not be your recipe to edit.");
+      setError(t("errorSave"));
     }
   }
 
-  if (!loaded) return <main className="px-4 py-6">Loading...</main>;
+  if (!loaded) return <main className="px-4 py-6">{t("loading")}</main>;
 
   return (
     <main className="px-4 py-6">
-      <h1 className="font-display uppercase text-2xl mb-4">Edit Recipe</h1>
+      <h1 className="font-display uppercase text-2xl mb-4">{t("editTitle")}</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
         <div className="flex flex-col gap-2">
           <input
-            placeholder="Recipe name *"
+            placeholder={t("namePlaceholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="border border-stone rounded px-3 py-2 bg-surface"
             required
           />
-          <label className="text-sm text-ink/60">Portions</label>
+          <label className="text-sm text-ink/60">{t("portions")}</label>
           <input
             type="number"
             min={1}
@@ -115,19 +117,19 @@ export default function EditRecipePage() {
 
         <div>
           <p className="font-display uppercase text-sm text-basil mb-2">
-            Ingredients
+            {t("ingredients")}
           </p>
           {ingredients.map((ing, i) => (
             <div key={i} className="flex gap-2 mb-2">
               <input
-                placeholder="Name"
+                placeholder={t("ingredientName")}
                 value={ing.name}
                 onChange={(e) => updateIngredient(i, "name", e.target.value)}
                 className="border border-stone rounded px-2 py-1 bg-surface flex-1"
               />
               <input
                 type="number"
-                placeholder="Qty"
+                placeholder={t("qty")}
                 value={ing.quantity}
                 onChange={(e) =>
                   updateIngredient(i, "quantity", Number(e.target.value))
@@ -135,7 +137,7 @@ export default function EditRecipePage() {
                 className="border border-stone rounded px-2 py-1 bg-surface w-20"
               />
               <input
-                placeholder="Unit"
+                placeholder={t("unit")}
                 value={ing.unit}
                 onChange={(e) => updateIngredient(i, "unit", e.target.value)}
                 className="border border-stone rounded px-2 py-1 bg-surface w-20"
@@ -152,18 +154,18 @@ export default function EditRecipePage() {
             }
             className={`${buttonGhost} flex items-center gap-1`}
           >
-            <Plus size={14} /> add ingredient
+            <Plus size={14} /> {t("addIngredient")}
           </button>
         </div>
 
         <div>
           <p className="font-display uppercase text-sm text-basil mb-2">
-            Steps
+            {t("steps")}
           </p>
           {steps.map((step, i) => (
             <textarea
               key={i}
-              placeholder={`Step ${i + 1}`}
+              placeholder={`${t("stepPlaceholder")} ${i + 1}`}
               value={step}
               onChange={(e) => updateStep(i, e.target.value)}
               className="border border-stone rounded px-2 py-1 bg-surface w-full mb-2"
@@ -174,13 +176,13 @@ export default function EditRecipePage() {
             onClick={() => setSteps([...steps, ""])}
             className={`${buttonGhost} flex items-center gap-1`}
           >
-            <Plus size={14} /> add step
+            <Plus size={14} /> {t("addStep")}
           </button>
         </div>
 
         <div>
           <p className="font-display uppercase text-sm text-basil mb-2">
-            Nutrition
+            {t("nutrition")}
           </p>
           <div className="grid grid-cols-2 gap-2">
             {(
@@ -208,7 +210,7 @@ export default function EditRecipePage() {
         </div>
 
         <button type="submit" className={buttonPrimary}>
-          Save Changes
+          {t("save")}
         </button>
       </form>
     </main>

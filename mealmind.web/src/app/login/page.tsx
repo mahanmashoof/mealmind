@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { buttonPrimary } from "@/lib/styles";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,12 +14,13 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+  const t = useTranslations("auth");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!email.includes("@")) {
-      setError("Enter a valid email address.");
+      setError(t("errorEmail"));
       return;
     }
     try {
@@ -29,7 +31,7 @@ export default function LoginPage() {
       login(result.token);
       router.push("/");
     } catch {
-      setError("Invalid email or password");
+      setError(t("errorLogin"));
     }
   }
 
@@ -42,12 +44,12 @@ export default function LoginPage() {
       >
         <span className="absolute -top-2 left-6 w-3 h-3 rounded-full bg-parchment border border-stone" />
         <h1 className="font-display uppercase text-2xl text-ink tracking-wide mb-2">
-          Log In
+          {t("loginButton")}
         </h1>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <input
           type="email"
-          placeholder="Email *"
+          placeholder={`${t("email")} *`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-surface"
@@ -55,19 +57,19 @@ export default function LoginPage() {
         />
         <input
           type="password"
-          placeholder="Password *"
+          placeholder={`${t("password")} *`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border border-stone rounded px-3 py-2 bg-surface"
           required
         />
         <button type="submit" className={buttonPrimary}>
-          Log in
+          {t("loginButton")}
         </button>
         <p className="text-xs text-ink/60 text-center mt-1">
-          No account?{" "}
+          {t("noAccount")}{" "}
           <Link href="/register" className="text-basil hover:underline">
-            Register here
+            {t("registerHere")}
           </Link>
         </p>
       </form>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Recipe } from "@/types/recipe";
 import { assignRecipe } from "@/lib/api/plans";
+import { useTranslations } from "next-intl";
 
 export default function AssignSlotButton({
   planId,
@@ -21,6 +22,7 @@ export default function AssignSlotButton({
   const { authFetch } = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
+  const t = useTranslations("plan");
 
   async function assign(recipeId: number) {
     setError("");
@@ -38,7 +40,7 @@ export default function AssignSlotButton({
     return (
       <div className="flex flex-col items-center gap-2">
         <button onClick={() => setOpen(true)} className="text-blue-600 text-sm">
-          + assign
+          {t("assign")}
         </button>
         {error && <p className="text-red-600 text-xs">{error}</p>}
       </div>
@@ -52,7 +54,7 @@ export default function AssignSlotButton({
       onBlur={() => setOpen(false)}
       className="text-sm border border-stone rounded px-2 py-1 bg-surface animate-fade-in"
     >
-      <option value="">Choose a recipe...</option>
+      <option value="">{t("chooseRecipe")}</option>
       {recipes.map((r) => (
         <option key={r.id} value={r.id}>
           {r.name}
