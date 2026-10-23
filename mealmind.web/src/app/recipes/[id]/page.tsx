@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
-import { useTranslations } from "next-intl";
 import RecipeOwnerActions from "./RecipeOwnerActions";
 import { getRecipe } from "@/lib/api/recipes";
+import { getTranslations } from "next-intl/server";
 
 export default async function RecipeDetailPage({
   params,
@@ -10,7 +10,7 @@ export default async function RecipeDetailPage({
 }) {
   const { id } = await params;
   const recipe = await getRecipe(id);
-  const t = useTranslations("recipeDetail");
+  const t = await getTranslations("recipeDetail");
 
   return (
     <main className="px-4 py-6 bg-gray-50">

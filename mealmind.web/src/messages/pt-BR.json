@@ -66,6 +66,8 @@
     "errorSave": "Não foi possível salvar as alterações. Pode não ser sua receita para editar."
   },
   "recipeDetail": {
+    "steps": "Passos",
+    "ingredients": "Ingredientes",
     "deleteRecipe": "Excluir receita",
     "deleteConfirm": "Excluir esta receita?",
     "errorDelete": "Não foi possível excluir esta receita. Pode não ser sua para excluir.",

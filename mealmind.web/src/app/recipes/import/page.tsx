@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { buttonPrimary } from "@/lib/styles";
 import { useTranslations } from "next-intl";
+import { buttonPrimary } from "@/lib/styles";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -13,7 +13,7 @@ export default function ImportRecipePage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
   const router = useRouter();
   const t = useTranslations("import");
 
@@ -24,7 +24,7 @@ export default function ImportRecipePage() {
     setPreview(URL.createObjectURL(selected));
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!file) return;
     setLoading(true);
@@ -38,7 +38,14 @@ export default function ImportRecipePage() {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+
+      if (res.status === 401) {
+        logout();
+        router.push("/login");
+        return;
+      }
       if (!res.ok) throw new Error();
+
       const recipe = await res.json();
       router.push(`/recipes/${recipe.id}`);
     } catch {

@@ -66,6 +66,8 @@
     "errorSave": "Couldn't save changes. This may not be your recipe to edit."
   },
   "recipeDetail": {
+    "steps": "Steps",
+    "ingredients": "Ingredients",
     "deleteRecipe": "Delete recipe",
     "deleteConfirm": "Delete this recipe?",
     "errorDelete": "Couldn't delete this recipe. It may not be yours to delete.",

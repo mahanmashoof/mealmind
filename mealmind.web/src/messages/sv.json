@@ -66,6 +66,8 @@
     "errorSave": "Kunde inte spara ändringarna. Det kanske inte är ditt recept att redigera."
   },
   "recipeDetail": {
+    "steps": "Steg",
+    "ingredients": "Ingredienser",
     "deleteRecipe": "Ta bort recept",
     "deleteConfirm": "Ta bort det här receptet?",
     "errorDelete": "Kunde inte ta bort receptet. Det kanske inte är ditt att ta bort.",
