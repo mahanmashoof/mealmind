@@ -38,6 +38,7 @@ public class RecipeService : IRecipeService
     public async Task<Recipe> CreateAsync(Recipe recipe, string userId)
     {
         recipe.UserId = userId;
+        await EnsureRequiredFieldsAsync(recipe);
         _context.Recipes.Add(recipe);
         await _context.SaveChangesAsync();
         return recipe;
@@ -101,6 +102,7 @@ public class RecipeService : IRecipeService
             UserId = userId
         };
 
+        await EnsureRequiredFieldsAsync(recipe);
         _context.Recipes.Add(recipe);
         await _context.SaveChangesAsync();
         return recipe;
@@ -142,8 +144,47 @@ public class RecipeService : IRecipeService
             UserId = userId
         };
 
+        await EnsureRequiredFieldsAsync(recipe);
         _context.Recipes.Add(recipe);
         await _context.SaveChangesAsync();
         return recipe;
+    }
+
+    private async Task EnsureRequiredFieldsAsync(Recipe recipe)
+    {
+        var missingCalories = recipe.Nutrition is null || recipe.Nutrition.Calories <= 0;
+        var missingProtein = recipe.Nutrition is null || recipe.Nutrition.ProteinGrams <= 0;
+        var missingTime = recipe.CookingTimeMinutes is null || recipe.CookingTimeMinutes <= 0;
+
+        if (!missingCalories && !missingProtein && !missingTime) return;
+
+        var ingredientList = string.Join(", ", recipe.Ingredients.Select(i => $"{i.Quantity} {i.Unit} {i.Name}"));
+        var stepsList = string.Join(" ", recipe.Steps);
+
+        var schemaExample = new { calories = 0, proteinGrams = 0, cookingTimeMinutes = 0 };
+        var schemaJson = System.Text.Json.JsonSerializer.Serialize(schemaExample);
+
+        var prompt =
+            $"Estimate reasonable values for this recipe: \"{recipe.Name}\". " +
+            $"Ingredients: {ingredientList}. Steps: {stepsList}. " +
+            $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
+
+        var json = await _aiClient.GetJsonCompletionAsync(prompt);
+        var estimate = System.Text.Json.JsonSerializer.Deserialize<NutritionEstimate>(json,
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (estimate is null) return; // fail silently — better an incomplete recipe than a blocked save
+
+        recipe.Nutrition ??= new NutritionInfo();
+        if (missingCalories) recipe.Nutrition.Calories = estimate.Calories;
+        if (missingProtein) recipe.Nutrition.ProteinGrams = estimate.ProteinGrams;
+        if (missingTime) recipe.CookingTimeMinutes = estimate.CookingTimeMinutes;
+    }
+
+    private class NutritionEstimate
+    {
+        public int Calories { get; set; }
+        public double ProteinGrams { get; set; }
+        public int CookingTimeMinutes { get; set; }
     }
 }

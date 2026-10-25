@@ -20,4 +20,5 @@ export interface Recipe {
   portions: number;
   ingredients: Ingredient[];
   userId: string;
+  cookingTimeMinutes: number | null;
 }

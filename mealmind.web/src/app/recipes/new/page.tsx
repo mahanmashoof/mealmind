@@ -23,6 +23,7 @@ export default function NewRecipePage() {
     fatGrams: 0,
   });
   const [error, setError] = useState("");
+  const [cookingTime, setCookingTime] = useState<number | "">("");
   const { authFetch } = useAuth();
   const router = useRouter();
   const t = useTranslations("recipeForm");
@@ -91,6 +92,18 @@ export default function NewRecipePage() {
             min={1}
             value={portions}
             onChange={(e) => setPortions(Number(e.target.value))}
+            className="border border-stone rounded px-3 py-2 bg-surface w-24"
+          />
+          <label className="text-sm text-ink/60">{t("cookingTime")}</label>
+          <input
+            type="number"
+            min={0}
+            value={cookingTime}
+            onChange={(e) =>
+              setCookingTime(
+                e.target.value === "" ? "" : Number(e.target.value),
+              )
+            }
             className="border border-stone rounded px-3 py-2 bg-surface w-24"
           />
         </div>

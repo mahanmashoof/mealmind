@@ -63,7 +63,8 @@
     "errorPortions": "Portions must be at least 1.",
     "errorSteps": "Add at least one step.",
     "errorCreate": "Couldn't create the recipe. Check the fields and try again.",
-    "errorSave": "Couldn't save changes. This may not be your recipe to edit."
+    "errorSave": "Couldn't save changes. This may not be your recipe to edit.",
+    "cookingTime": "Cooking time (min)"
   },
   "recipeDetail": {
     "steps": "Steps",

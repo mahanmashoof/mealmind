@@ -123,6 +123,9 @@ namespace MealMind.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CookingTimeMinutes")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 

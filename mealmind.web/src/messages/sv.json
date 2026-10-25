@@ -63,7 +63,8 @@
     "errorPortions": "Portioner måste vara minst 1.",
     "errorSteps": "Lägg till minst ett steg.",
     "errorCreate": "Kunde inte skapa receptet. Kontrollera fälten och försök igen.",
-    "errorSave": "Kunde inte spara ändringarna. Det kanske inte är ditt recept att redigera."
+    "errorSave": "Kunde inte spara ändringarna. Det kanske inte är ditt recept att redigera.",
+    "cookingTime": "Tillagningstid (min)"
   },
   "recipeDetail": {
     "steps": "Steg",

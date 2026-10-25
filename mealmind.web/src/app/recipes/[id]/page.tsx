@@ -25,7 +25,9 @@ export default async function RecipeDetailPage({
 
       <RecipeOwnerActions recipeId={recipe.id} ownerId={recipe.userId} />
       <p className="text-sm text-gray-500 mb-4">
-        {recipe.portions} portions · {recipe.nutrition.calories} cal
+        {recipe.portions} portions · {recipe.nutrition.calories} cal .{" "}
+        {recipe.nutrition.proteinGrams}g protein
+        {recipe.cookingTimeMinutes && ` · ${recipe.cookingTimeMinutes} min`}
       </p>
       <h2 className="font-semibold mt-4 mb-1">{t("ingredients")}</h2>
       <ul className="font-mono text-sm flex flex-col gap-1">

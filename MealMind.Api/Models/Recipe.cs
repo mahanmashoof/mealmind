@@ -15,5 +15,6 @@ namespace MealMind.Api.Models
         public int Portions { get; set; }
         public List<Ingredient> Ingredients { get; set; } = [];
         public string UserId { get; set; } = string.Empty;
+        public int? CookingTimeMinutes { get; set; }
     }
 }
