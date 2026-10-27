@@ -6,11 +6,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using MealMind.Api.Models;
+using FirebaseAdmin.Auth;
+using Microsoft.EntityFrameworkCore;
+using MealMind.Api.Data;
 
 namespace MealMind.Api.Controllers;
 
-public record RegisterRequest(string Email, string Password);
-public record LoginRequest(string Email, string Password);
+public record GoogleLoginRequest(string IdToken);
 
 [ApiController]
 [Route("api/[controller]")]
@@ -19,32 +21,44 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _config;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration config)
+    private readonly MealMindDBContext _context;
+
+    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration config, MealMindDBContext context)
     {
         _userManager = userManager;
         _config = config;
+        _context = context;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+
+    [HttpPost("google-login")]
+    public async Task<IActionResult> GoogleLogin(GoogleLoginRequest request)
     {
-        var user = new ApplicationUser { UserName = request.Email, Email = request.Email };
-        var result = await _userManager.CreateAsync(user, request.Password);
+        FirebaseToken decodedToken;
+        try
+        {
+            decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(request.IdToken);
+        }
+        catch (FirebaseAuthException)
+        {
+            return Unauthorized(new { error = "Invalid Google token." });
+        }
 
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
+        var email = decodedToken.Claims["email"]?.ToString();
+        if (email is null) return Unauthorized();
 
-        return Ok(new { message = "User created" });
-    }
+        var isAllowed = await _context.AllowedUsers.AnyAsync(a => a.Email == email);
+        if (!isAllowed)
+            return StatusCode(403, new { error = "This account isn't approved for MealMind yet." });
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)
-    {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
-            return Unauthorized();
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+        {
+            user = new ApplicationUser { UserName = email, Email = email };
+            await _userManager.CreateAsync(user); // no password — Google is the only way in
+        }
 
-        var token = GenerateToken(user);
+        var token = GenerateToken(user); // Chapter 9's existing method, unchanged
         return Ok(new { token });
     }
 

@@ -10,6 +10,8 @@ using Microsoft.OpenApi;
 using MealMind.Api.Service;
 using System.Text.Json.Serialization;
 using CloudinaryDotNet;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +93,14 @@ builder.Services.AddSingleton(sp =>
 builder.Services.Configure<HostOptions>(options =>
 {
     options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+});
+
+
+var firebaseJson = builder.Configuration["Firebase:ServiceAccountJson"]!;
+
+FirebaseApp.Create(new AppOptions
+{
+    Credential = CredentialFactory.FromJson(firebaseJson, "service_account")
 });
 
 var app = builder.Build();
