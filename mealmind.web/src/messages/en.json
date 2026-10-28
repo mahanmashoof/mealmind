@@ -92,7 +92,9 @@
     "haveAccount": "Already have an account?",
     "loginHere": "Log in here",
     "errorEmail": "Enter a valid email address.",
-    "errorPassword": "Password must be at least 6 characters."
+    "errorPassword": "Password must be at least 6 characters.",
+    "notApproved": "Your account isn't approved for MealMind yet.",
+    "signInFailed": "Sign-in failed. Try again."
   },
   "aiGenerate": {
     "title": "Ask the AI for a recipe",

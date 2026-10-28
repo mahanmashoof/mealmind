@@ -92,7 +92,9 @@
     "haveAccount": "Har du redan ett konto?",
     "loginHere": "Logga in här",
     "errorEmail": "Ange en giltig e-postadress.",
-    "errorPassword": "Lösenordet måste vara minst 6 tecken."
+    "errorPassword": "Lösenordet måste vara minst 6 tecken.",
+    "notApproved": "Ditt konto är inte godkänt för MealMind än.",
+    "signInFailed": "Inloggningen misslyckades. Försök igen."
   },
   "aiGenerate": {
     "title": "Fråga AI:n om ett recept",

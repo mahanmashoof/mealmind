@@ -92,7 +92,9 @@
     "haveAccount": "Já tem uma conta?",
     "loginHere": "Entre aqui",
     "errorEmail": "Digite um e-mail válido.",
-    "errorPassword": "A senha deve ter pelo menos 6 caracteres."
+    "errorPassword": "A senha deve ter pelo menos 6 caracteres.",
+    "notApproved": "Sua conta ainda não foi aprovada para o MealMind.",
+    "signInFailed": "Falha no login. Tente novamente." 
   },
   "aiGenerate": {
     "title": "Pedir uma receita à IA",

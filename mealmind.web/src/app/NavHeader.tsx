@@ -18,19 +18,24 @@ import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useGoogleLogin } from "@/lib/useGoogleLogin";
 
 export default function NavHeader() {
   const t = useTranslations("nav");
   const { token, email, logout, initialized } = useAuth();
   const { dark, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const { signIn, error } = useGoogleLogin();
 
   function closeMenu() {
     setOpen(false);
   }
 
+  console.log(token);
+
   return (
     <header className="sticky top-0 z-50 bg-ink text-parchment px-4 py-3">
+      {error && <p className="text-red-400 text-xs pt-2">{error}</p>}
       <div className="flex items-center justify-between">
         <Link
           href="/"
@@ -67,7 +72,7 @@ export default function NavHeader() {
           </button>
           <LanguageSwitcher />
           {!initialized ? (
-            <span className="w-16" /> // reserves space, avoids layout shift
+            <span className="w-16" />
           ) : token ? (
             <>
               <span className="text-parchment/60 text-xs">{email}</span>
@@ -79,9 +84,12 @@ export default function NavHeader() {
               </button>
             </>
           ) : (
-            <Link href="/login" className="text-butter flex items-center gap-1">
+            <button
+              onClick={signIn}
+              className="text-butter flex items-center gap-1"
+            >
               <LogIn size={16} /> {t("logIn")}
-            </Link>
+            </button>
           )}
         </nav>
 
@@ -149,13 +157,15 @@ export default function NavHeader() {
               </button>
             </>
           ) : (
-            <Link
-              href="/login"
-              onClick={closeMenu}
+            <button
+              onClick={() => {
+                signIn();
+                closeMenu();
+              }}
               className="text-butter flex items-center gap-2"
             >
               <LogIn size={16} /> {t("logIn")}
-            </Link>
+            </button>
           )}
         </nav>
       )}
