@@ -32,7 +32,7 @@ export default function ImageUpload({ recipeId }: { recipeId: number }) {
 
       if (res.status === 401) {
         logout();
-        router.push("/login");
+        router.push("/");
         return;
       }
       if (!res.ok) throw new Error();

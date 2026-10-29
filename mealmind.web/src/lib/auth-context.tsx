@@ -79,7 +79,7 @@ export function AuthProvider({
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         logout();
-        router.push("/login");
+        router.push("/");
       }
       throw err; // still lets the calling component show its own message for non-401 errors
     }
