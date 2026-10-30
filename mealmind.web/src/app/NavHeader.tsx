@@ -31,8 +31,6 @@ export default function NavHeader() {
     setOpen(false);
   }
 
-  console.log(token);
-
   return (
     <header className="sticky top-0 z-50 bg-ink text-parchment px-4 py-3">
       {error && <p className="text-red-400 text-xs pt-2">{error}</p>}

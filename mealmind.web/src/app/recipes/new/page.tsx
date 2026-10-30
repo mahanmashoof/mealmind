@@ -72,6 +72,13 @@ export default function NewRecipePage() {
     }
   }
 
+  function removeStep(i: number) {
+    setSteps(steps.filter((_, idx) => idx !== i));
+  }
+  function removeIngredient(i: number) {
+    setIngredients(ingredients.filter((_, idx) => idx !== i));
+  }
+
   return (
     <main className="px-4 py-6">
       <h1 className="font-display uppercase text-2xl mb-4">{t("newTitle")}</h1>
@@ -113,7 +120,7 @@ export default function NewRecipePage() {
             {t("ingredients")}
           </p>
           {ingredients.map((ing, i) => (
-            <div key={i} className="flex gap-2 mb-2">
+            <div key={i} className="flex gap-2 mb-2 items-center">
               <input
                 placeholder={t("ingredientName")}
                 value={ing.name}
@@ -135,6 +142,16 @@ export default function NewRecipePage() {
                 onChange={(e) => updateIngredient(i, "unit", e.target.value)}
                 className="border border-stone rounded px-2 py-1 bg-surface w-20"
               />
+              {ingredients.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeIngredient(i)}
+                  className="text-ink/40 hover:text-red-600"
+                  aria-label="Remove"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           ))}
           <button
@@ -156,13 +173,24 @@ export default function NewRecipePage() {
             {t("steps")}
           </p>
           {steps.map((step, i) => (
-            <textarea
-              key={i}
-              placeholder={`${t("stepPlaceholder")} ${i + 1}`}
-              value={step}
-              onChange={(e) => updateStep(i, e.target.value)}
-              className="border border-stone rounded px-2 py-1 bg-surface w-full mb-2"
-            />
+            <div key={i} className="flex gap-2 mb-2 items-start">
+              <textarea
+                placeholder={t("stepPlaceholder", { number: i + 1 })}
+                value={step}
+                onChange={(e) => updateStep(i, e.target.value)}
+                className="border border-stone rounded px-2 py-1 bg-surface w-full"
+              />
+              {steps.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeStep(i)}
+                  className="text-ink/40 hover:text-red-600 mt-2"
+                  aria-label="Remove"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           ))}
           <button
             type="button"
