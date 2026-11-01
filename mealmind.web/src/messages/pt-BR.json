@@ -5,7 +5,8 @@
     "newRecipe": "Nova Receita",
     "reminders": "Lembretes",
     "logIn": "Entrar",
-    "logOut": "Sair"
+    "logOut": "Sair",
+    "importPhoto": "Importar de foto"
   },
   "home": {
     "title": "Receitas",

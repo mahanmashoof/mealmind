@@ -5,7 +5,8 @@
     "newRecipe": "Nytt recept",
     "reminders": "Påminnelser",
     "logIn": "Logga in",
-    "logOut": "Logga ut"
+    "logOut": "Logga ut",
+    "importPhoto": "Importera från foto"
   },
   "home": {
     "title": "Recept",

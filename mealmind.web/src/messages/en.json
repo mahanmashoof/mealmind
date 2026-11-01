@@ -5,7 +5,8 @@
     "newRecipe": "New Recipe",
     "reminders": "Reminders",
     "logIn": "Log in",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "importPhoto": "Import from photo"
   },
   "home": {
     "title": "Recipes",

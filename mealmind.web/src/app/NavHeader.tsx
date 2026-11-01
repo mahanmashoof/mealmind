@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   CirclePlus,
+  ImageUp,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
@@ -52,6 +53,11 @@ export default function NavHeader() {
               className="flex items-center gap-1"
             >
               <CirclePlus size={16} /> {t("newRecipe")}
+            </Link>
+          )}
+          {token && (
+            <Link href="/recipes/import" className="flex items-center gap-1">
+              <ImageUp size={16} /> {t("importPhoto")}
             </Link>
           )}
           <Link href="/plan" className="flex items-center gap-1">
@@ -111,6 +117,15 @@ export default function NavHeader() {
               className="flex items-center gap-2"
             >
               <CirclePlus size={16} /> {t("newRecipe")}
+            </Link>
+          )}
+          {token && (
+            <Link
+              href="/recipes/import"
+              onClick={closeMenu}
+              className="flex items-center gap-2"
+            >
+              <ImageUp size={16} /> {t("importPhoto")}
             </Link>
           )}
           <Link
