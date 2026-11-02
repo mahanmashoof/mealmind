@@ -76,7 +76,8 @@
     "uploadPhoto": "Upload photo",
     "uploading": "Uploading...",
     "errorUpload": "Couldn't upload image.",
-    "notFound": "Recipe not found."
+    "notFound": "Recipe not found.",
+    "portionsLabel": "Portions"
   },
   "auth": {
     "loginTitle": "Log In",

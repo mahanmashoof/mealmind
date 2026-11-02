@@ -76,7 +76,8 @@
     "uploadPhoto": "Enviar foto",
     "uploading": "Enviando...",
     "errorUpload": "Não foi possível enviar a imagem.",
-    "notFound": "Receita não encontrada."
+    "notFound": "Receita não encontrada.",
+    "portionsLabel": "porções"
   },
   "auth": {
     "loginTitle": "Entrar",

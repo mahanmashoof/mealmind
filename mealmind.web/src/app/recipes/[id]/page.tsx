@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import RecipeOwnerActions from "./RecipeOwnerActions";
 import { getRecipe } from "@/lib/api/recipes";
 import { getTranslations } from "next-intl/server";
+import PortionScaler from "./PortionScaler";
 
 export default async function RecipeDetailPage({
   params,
@@ -25,22 +26,14 @@ export default async function RecipeDetailPage({
 
       <RecipeOwnerActions recipeId={recipe.id} ownerId={recipe.userId} />
       <p className="text-sm text-gray-500 mb-4">
-        {recipe.portions} portions · {recipe.nutrition.calories} cal .{" "}
-        {recipe.nutrition.proteinGrams}g protein
         {recipe.cookingTimeMinutes && ` · ${recipe.cookingTimeMinutes} min`}
       </p>
       <h2 className="font-semibold mt-4 mb-1">{t("ingredients")}</h2>
-      <ul className="font-mono text-sm flex flex-col gap-1">
-        {recipe.ingredients.map((i, idx) => (
-          <li key={idx} className="flex items-baseline gap-2">
-            <span>{i.name}</span>
-            <span className="flex-1 border-b border-dotted border-stone -translate-y-0.75" />
-            <span className="text-basil">
-              {i.quantity} {i.unit}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <PortionScaler
+        basePortions={recipe.portions}
+        ingredients={recipe.ingredients}
+        nutrition={recipe.nutrition}
+      />
       <h2 className="font-semibold mt-4 mb-1">{t("steps")}</h2>
       <ol className="text-sm text-gray-700 list-decimal list-inside flex flex-col gap-1">
         {recipe.steps.map((step, idx) => (

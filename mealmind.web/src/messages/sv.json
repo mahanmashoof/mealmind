@@ -76,7 +76,8 @@
     "uploadPhoto": "Ladda upp foto",
     "uploading": "Laddar upp...",
     "errorUpload": "Kunde inte ladda upp bilden.",
-    "notFound": "Receptet hittades inte."
+    "notFound": "Receptet hittades inte.",
+    "portionsLabel": "portioner"
   },
   "auth": {
     "loginTitle": "Logga in",
