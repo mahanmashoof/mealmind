@@ -9,8 +9,7 @@ import { buttonPrimary } from "@/lib/styles";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ImportRecipePage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { token, logout } = useAuth();
@@ -18,22 +17,23 @@ export default function ImportRecipePage() {
   const t = useTranslations("import");
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const selected = e.target.files?.[0];
-    if (!selected) return;
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
+    const selected = Array.from(e.target.files ?? []);
+    setFiles(selected);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!file) return;
+    if (files.length === 0) return;
     setLoading(true);
     setError("");
     try {
       const formData = new FormData();
-      formData.append("image", file);
+      let endpoint: string;
 
-      const res = await fetch(`${API_URL}/recipes/import-image`, {
+      files.forEach((f) => formData.append("images", f));
+      endpoint = "import-images";
+
+      const res = await fetch(`${API_URL}/recipes/${endpoint}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -41,7 +41,7 @@ export default function ImportRecipePage() {
 
       if (res.status === 401) {
         logout();
-        router.push("/");
+        router.push("/login");
         return;
       }
       if (!res.ok) throw new Error();
@@ -60,17 +60,27 @@ export default function ImportRecipePage() {
       <h1 className="font-display uppercase text-xl mb-4">{t("title")}</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         {error && <p className="text-red-600 text-sm">{error}</p>}
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        {preview && (
-          <img
-            src={preview}
-            alt="preview"
-            className="w-full rounded-lg border border-stone object-contain"
-          />
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+        />
+        {files.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {files.map((f, i) => (
+              <img
+                key={i}
+                src={URL.createObjectURL(f)}
+                alt=""
+                className="w-20 h-20 object-cover rounded border border-stone"
+              />
+            ))}
+          </div>
         )}
         <button
           type="submit"
-          disabled={!file || loading}
+          disabled={files.length === 0 || loading}
           className={`${buttonPrimary} ${loading ? "animate-pulse" : ""}`}
         >
           {loading ? t("importing") : t("importButton")}

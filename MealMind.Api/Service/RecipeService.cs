@@ -15,7 +15,7 @@ public interface IRecipeService
     Task<RecipeOpResult> UpdateAsync(int id, Recipe updated, string userId);
     Task<RecipeOpResult> DeleteAsync(int id, string userId);
     Task<Recipe> CreateFromAiAsync(string userPrompt, string userId);
-    Task<Recipe> CreateFromImageAsync(IFormFile image, string userId);
+    Task<Recipe> CreateFromImagesAsync(List<IFormFile> images, string userId);
 }
 
 public class RecipeService : IRecipeService
@@ -108,11 +108,15 @@ public class RecipeService : IRecipeService
         return recipe;
     }
 
-    public async Task<Recipe> CreateFromImageAsync(IFormFile image, string userId)
+    public async Task<Recipe> CreateFromImagesAsync(List<IFormFile> images, string userId)
     {
-        using var ms = new MemoryStream();
-        await image.CopyToAsync(ms);
-        var imageBytes = ms.ToArray();
+        var imageData = new List<(byte[], string)>();
+        foreach (var image in images)
+        {
+            using var ms = new MemoryStream();
+            await image.CopyToAsync(ms);
+            imageData.Add((ms.ToArray(), image.ContentType));
+        }
 
         var schemaExample = new
         {
@@ -124,12 +128,13 @@ public class RecipeService : IRecipeService
         };
         var schemaJson = System.Text.Json.JsonSerializer.Serialize(schemaExample);
 
+        var imageWord = images.Count > 1 ? "images" : "image";
         var prompt =
-            "This image shows a recipe (from a cookbook page, handwritten note, or similar). " +
-            "Read it carefully and transcribe it faithfully — do not invent ingredients or steps that aren't shown or implied. " +
+            $"This {imageWord} shows a recipe" + (images.Count > 1 ? " — together they cover one recipe (e.g. multiple pages or angles)." : ".") +
+            " Read it carefully and transcribe it faithfully — do not invent ingredients or steps that aren't shown or implied. " +
             $"Respond ONLY with JSON matching this exact shape: {schemaJson}";
 
-        var json = await _aiClient.GetJsonCompletionFromImageAsync(prompt, imageBytes, image.ContentType);
+        var json = await _aiClient.GetJsonCompletionFromImagesAsync(prompt, imageData);
         var draft = System.Text.Json.JsonSerializer.Deserialize<AiRecipeDraft>(json,
             new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidOperationException("AI returned invalid recipe data");

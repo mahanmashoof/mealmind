@@ -104,11 +104,14 @@ public class RecipesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = recipe.Id }, recipe);
     }
 
-    [HttpPost("import-image")]
+    [HttpPost("import-images")]
     [Authorize]
-    public async Task<IActionResult> ImportFromImage(IFormFile image)
+    public async Task<IActionResult> ImportFromImages(List<IFormFile> images)
     {
-        var recipe = await _recipeService.CreateFromImageAsync(image, CurrentUserId);
+        if (images is null || images.Count == 0)
+            return BadRequest(new { error = "No images provided." });
+
+        var recipe = await _recipeService.CreateFromImagesAsync(images, CurrentUserId);
         return CreatedAtAction(nameof(GetById), new { id = recipe.Id }, recipe);
     }
 }

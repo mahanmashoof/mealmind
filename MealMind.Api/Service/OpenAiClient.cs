@@ -47,26 +47,19 @@ public class OpenAiClient : IAiClient
         return result?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty;
     }
 
-    public async Task<string> GetJsonCompletionFromImageAsync(string prompt, byte[] imageBytes, string mimeType)
+    public async Task<string> GetJsonCompletionFromImagesAsync(string prompt, IEnumerable<(byte[] Bytes, string MimeType)> images)
     {
-        var base64Image = Convert.ToBase64String(imageBytes);
-        var dataUrl = $"data:{mimeType};base64,{base64Image}";
+        var content = new List<object> { new { type = "text", text = prompt } };
+        foreach (var (bytes, mimeType) in images)
+        {
+            var base64 = Convert.ToBase64String(bytes);
+            content.Add(new { type = "image_url", image_url = new { url = $"data:{mimeType};base64,{base64}" } });
+        }
 
         var request = new
         {
             model = "gpt-4o-mini",
-            messages = new object[]
-            {
-            new
-            {
-                role = "user",
-                content = new object[]
-                {
-                    new { type = "text", text = prompt },
-                    new { type = "image_url", image_url = new { url = dataUrl } }
-                }
-            }
-            },
+            messages = new object[] { new { role = "user", content } },
             response_format = new { type = "json_object" }
         };
 

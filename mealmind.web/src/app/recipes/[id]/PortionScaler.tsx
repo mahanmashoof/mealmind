@@ -14,7 +14,7 @@ export default function PortionScaler({
   nutrition: NutritionInfo;
 }) {
   const [portions, setPortions] = useState(basePortions);
-  const factor = portions / basePortions;
+  const factor = basePortions > 0 ? portions / basePortions : 1;
   const t = useTranslations("recipeDetail");
 
   function scale(value: number) {
