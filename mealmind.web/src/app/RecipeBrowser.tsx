@@ -5,51 +5,83 @@ import {
   Search,
   LayoutGrid,
   List as ListIcon,
-  ArrowDown,
   ArrowUp,
+  ArrowDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "next-intl";
 import RecipeCard from "./RecipeCard";
 import { Recipe } from "@/types/recipe";
-import { useTranslations } from "next-intl";
 
 const PAGE_SIZE = 9;
+const PROTEIN_THRESHOLD = 20; // grams
+const CALORIE_THRESHOLD = 400; // cal
+const QUICK_THRESHOLD = 30; // minutes
 
 type SortKey = "name" | "calories" | "portions";
 
 export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
   const { userId } = useAuth();
+  const t = useTranslations("home");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("name");
+  const [desc, setDesc] = useState(false);
   const [onlyMine, setOnlyMine] = useState(false);
   const [view, setView] = useState<"list" | "grid">("list");
   const [page, setPage] = useState(1);
-  const [desc, setDesc] = useState(false);
 
-  const t = useTranslations("home");
+  const [showFilters, setShowFilters] = useState(false);
+  const [proteinRich, setProteinRich] = useState(false);
+  const [lowCalorie, setLowCalorie] = useState(false);
+  const [quick, setQuick] = useState(false);
 
   const filtered = useMemo(() => {
     let result = recipes;
+
     if (query.trim()) {
-      result = result.filter((r) =>
-        r.name.toLowerCase().includes(query.trim().toLowerCase()),
+      const q = query.trim().toLowerCase();
+      result = result.filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.ingredients.some((i) => i.name.toLowerCase().includes(q)),
       );
     }
-    if (onlyMine) {
-      result = result.filter((r) => r.userId === userId);
-    }
+    if (onlyMine) result = result.filter((r) => r.userId === userId);
+    if (proteinRich)
+      result = result.filter(
+        (r) => r.nutrition.proteinGrams >= PROTEIN_THRESHOLD,
+      );
+    if (lowCalorie)
+      result = result.filter((r) => r.nutrition.calories <= CALORIE_THRESHOLD);
+    if (quick)
+      result = result.filter(
+        (r) =>
+          r.cookingTimeMinutes != null &&
+          r.cookingTimeMinutes <= QUICK_THRESHOLD,
+      );
+
     result = [...result].sort((a, b) => {
       let diff = 0;
       if (sort === "name") diff = a.name.localeCompare(b.name);
       else if (sort === "calories")
         diff = a.nutrition.calories - b.nutrition.calories;
       else diff = a.portions - b.portions;
-
-      if (diff === 0) diff = a.name.localeCompare(b.name); // stable tie-breaker
+      if (diff === 0) diff = a.name.localeCompare(b.name);
       return desc ? -diff : diff;
     });
     return result;
-  }, [recipes, query, sort, desc, onlyMine, userId]);
+  }, [
+    recipes,
+    query,
+    sort,
+    desc,
+    onlyMine,
+    proteinRich,
+    lowCalorie,
+    quick,
+    userId,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const page_ = Math.min(page, totalPages);
@@ -57,7 +89,7 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-2">
         <div className="flex items-center gap-2 border border-stone rounded px-3 py-2 bg-surface flex-1">
           <Search size={16} className="text-ink/40" />
           <input
@@ -87,6 +119,14 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
           aria-label={desc ? "Sort descending" : "Sort ascending"}
         >
           {desc ? <ArrowDown size={16} /> : <ArrowUp size={16} />}
+        </button>
+
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className={`border border-stone rounded px-2 py-2 ${showFilters ? "bg-basil text-parchment" : "bg-surface"}`}
+          aria-label="Toggle filters"
+        >
+          <SlidersHorizontal size={16} />
         </button>
 
         {userId && (
@@ -120,6 +160,44 @@ export default function RecipeBrowser({ recipes }: { recipes: Recipe[] }) {
           </button>
         </div>
       </div>
+
+      {showFilters && (
+        <div className="flex flex-wrap gap-3 mb-4 px-1 text-sm animate-fade-in">
+          <label className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={proteinRich}
+              onChange={(e) => {
+                setProteinRich(e.target.checked);
+                setPage(1);
+              }}
+            />
+            {t("filterProtein")}
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={lowCalorie}
+              onChange={(e) => {
+                setLowCalorie(e.target.checked);
+                setPage(1);
+              }}
+            />
+            {t("filterLowCal")}
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={quick}
+              onChange={(e) => {
+                setQuick(e.target.checked);
+                setPage(1);
+              }}
+            />
+            {t("filterQuick")}
+          </label>
+        </div>
+      )}
 
       {pageItems.length === 0 ? (
         <p className="text-ink/60 text-center py-10">{t("noResults")}</p>

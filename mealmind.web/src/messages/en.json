@@ -23,7 +23,10 @@
     "calories": "cal",
     "portions": "portions",
     "edit": "Edit",
-    "addToPlan": "Add to plan"
+    "addToPlan": "Add to plan",
+    "filterProtein": "Protein-rich (20g+)",
+    "filterLowCal": "Low-calorie (≤400)",
+    "filterQuick": "Quick (≤30 min)"
   },
   "plan": {
     "title": "This Week",

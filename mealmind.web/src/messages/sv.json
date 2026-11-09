@@ -23,7 +23,10 @@
     "calories": "kcal",
     "portions": "portioner",
     "edit": "Redigera",
-    "addToPlan": "Lägg till i plan"
+    "addToPlan": "Lägg till i plan",
+    "filterProtein": "Proteinrik (20g+)",
+    "filterLowCal": "Lågkalori (≤400)",
+    "filterQuick": "Snabb (≤30 min)"
   },
   "plan": {
     "title": "Den här veckan",
