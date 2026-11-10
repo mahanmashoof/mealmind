@@ -1,17 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "next-intl";
 import CreatePlanButton from "./CreatePlanButton";
-import AssignSlotButton from "./AssignSlotButton";
-import RemoveEntryButton from "./RemoveEntryButton";
 import DeletePlanButton from "./DeletePlanButton";
 import PrepPlanButton from "./PrepPlanButton";
+import PlanCellInput from "./PlanCellInput";
+import RemoveEntryButton from "./RemoveEntryButton";
 import { Recipe } from "@/types/recipe";
 import { WeeklyPlan } from "@/types/plan";
 import { Coffee, Sun, Moon, Cookie } from "lucide-react";
-import { useTranslations } from "next-intl";
 
-const DAYS = [
+const DAY_KEYS = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
+const DAY_VALUES = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -20,7 +30,8 @@ const DAYS = [
   "Saturday",
   "Sunday",
 ];
-const SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"];
+const SLOT_KEYS = ["breakfast", "lunch", "dinner", "snack"];
+const SLOT_VALUES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
 const SLOT_ICONS: Record<string, React.ReactNode> = {
   Breakfast: <Coffee size={14} />,
@@ -37,8 +48,9 @@ export default function PlanBoard({
   recipes: Recipe[];
 }) {
   const { userId } = useAuth();
-  const plan = plans.find((p) => p.userId === userId);
   const t = useTranslations("plan");
+  const plan = plans.find((p) => p.userId === userId);
+  const [activeDay, setActiveDay] = useState(0); // index into DAY_VALUES, mobile only
 
   return (
     <main className="px-4 py-6">
@@ -63,53 +75,126 @@ export default function PlanBoard({
       )}
 
       {plan && (
-        <div className="flex flex-col gap-4">
-          {DAYS.map((day) => (
-            <div
-              key={day}
-              className="relative bg-surface border border-stone rounded-b-lg shadow-sm p-4 pt-5"
-              style={{ borderTop: "2px dashed var(--color-stone)" }}
-            >
-              <span className="absolute -top-2 left-4 w-3 h-3 rounded-full bg-parchment border border-stone" />
-              <p className="font-display uppercase tracking-wide text-basil text-lg mb-2">
-                {t(day.toLocaleLowerCase())}
-              </p>
-              <div className="flex flex-col gap-2">
-                {SLOTS.map((slot) => {
-                  const entry = plan.entries.find(
-                    (e) => e.day === day && e.slot === slot,
-                  );
-                  return (
-                    <div
-                      key={slot}
-                      className="flex items-baseline justify-between text-sm"
-                    >
-                      <span className="uppercase text-xs tracking-wide text-ink/60 flex items-center gap-1">
-                        {SLOT_ICONS[slot]} {t(slot.toLocaleLowerCase())}
-                      </span>
+        <>
+          {/* MOBILE: day switcher + single day's meals */}
+          <div className="md:hidden">
+            <div className="flex gap-1 mb-3 overflow-x-auto">
+              {DAY_KEYS.map((dayKey, i) => (
+                <button
+                  key={dayKey}
+                  onClick={() => setActiveDay(i)}
+                  className={`shrink-0 font-display uppercase text-xs px-3 py-2 rounded ${
+                    activeDay === i
+                      ? "bg-basil text-parchment"
+                      : "bg-surface border border-stone text-ink/70"
+                  }`}
+                >
+                  {t(dayKey).slice(0, 3)}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {SLOT_KEYS.map((slotKey, si) => {
+                const slotValue = SLOT_VALUES[si];
+                const dayValue = DAY_VALUES[activeDay];
+                const entry = plan.entries.find(
+                  (e) => e.day === dayValue && e.slot === slotValue,
+                );
+                return (
+                  <div
+                    key={slotKey}
+                    className="bg-surface border border-stone rounded p-2 flex items-center gap-2"
+                  >
+                    <span className="flex items-center gap-1 text-xs text-ink/60 w-20 shrink-0">
+                      {SLOT_ICONS[slotValue]} {t(slotKey)}
+                    </span>
+                    <div className="flex-1">
                       {entry ? (
-                        <span className="flex items-center">
-                          {entry.recipe?.name}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm truncate">
+                            {entry.recipe?.name}
+                          </span>
                           <RemoveEntryButton
                             planId={plan.id}
                             entryId={entry.id}
                           />
-                        </span>
+                        </div>
                       ) : (
-                        <AssignSlotButton
+                        <PlanCellInput
                           planId={plan.id}
-                          day={day}
-                          slot={slot}
+                          day={dayValue}
+                          slot={slotValue}
                           recipes={recipes}
                         />
                       )}
                     </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* DESKTOP: full 4x7 table */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="border-collapse text-xs min-w-160 w-full">
+              <thead>
+                <tr>
+                  <th className="sticky left-0 bg-parchment"></th>
+                  {DAY_KEYS.map((dayKey) => (
+                    <th
+                      key={dayKey}
+                      className="font-display uppercase text-ink/70 text-center py-1 px-1 min-w-20"
+                    >
+                      {t(dayKey).slice(0, 3)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {SLOT_KEYS.map((slotKey, si) => {
+                  const slotValue = SLOT_VALUES[si];
+                  return (
+                    <tr key={slotKey} className="border-t border-stone">
+                      <td className="sticky left-0 bg-parchment pr-2 py-2 text-ink/70 whitespace-nowrap">
+                        <span className="flex items-center gap-1">
+                          {SLOT_ICONS[slotValue]} {t(slotKey)}
+                        </span>
+                      </td>
+                      {DAY_VALUES.map((dayValue) => {
+                        const entry = plan.entries.find(
+                          (e) => e.day === dayValue && e.slot === slotValue,
+                        );
+                        return (
+                          <td key={dayValue} className="px-1 py-1 align-top">
+                            {entry ? (
+                              <div className="flex items-center justify-between bg-surface border border-stone rounded px-1 py-1">
+                                <span className="truncate">
+                                  {entry.recipe?.name}
+                                </span>
+                                <RemoveEntryButton
+                                  planId={plan.id}
+                                  entryId={entry.id}
+                                />
+                              </div>
+                            ) : (
+                              <PlanCellInput
+                                planId={plan.id}
+                                day={dayValue}
+                                slot={slotValue}
+                                recipes={recipes}
+                              />
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
                   );
                 })}
-              </div>
-            </div>
-          ))}
-        </div>
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </main>
   );

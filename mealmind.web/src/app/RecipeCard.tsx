@@ -57,6 +57,59 @@ export default function RecipeCard({
     }
   }
 
+  const addToPlanControl = userId && (
+    <div className={view === "grid" ? "p-2 pt-0" : "absolute bottom-3 right-3"}>
+      {!adding ? (
+        <button
+          onClick={() => setAdding(true)}
+          className="text-xs text-basil flex items-center gap-1"
+          aria-label={t("addToPlan")}
+        >
+          <CalendarPlus size={16} />
+        </button>
+      ) : (
+        <div className="flex items-center gap-1 bg-surface border border-stone rounded px-2 py-1 animate-fade-in flex-wrap">
+          <select
+            value={day}
+            onChange={(e) => setDay(e.target.value)}
+            className="text-xs bg-transparent"
+          >
+            {DAYS.map((d) => (
+              <option key={d} value={d}>
+                {d.slice(0, 3)}
+              </option>
+            ))}
+          </select>
+          <select
+            value={slot}
+            onChange={(e) => setSlot(e.target.value)}
+            className="text-xs bg-transparent"
+          >
+            {SLOTS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={handleAdd}
+            disabled={status === "saving"}
+            aria-label="Confirm"
+          >
+            {status === "done" ? (
+              <Check size={14} className="text-basil" />
+            ) : (
+              "✓"
+            )}
+          </button>
+        </div>
+      )}
+      {status === "error" && (
+        <p className="text-xs text-red-600 mt-1">{t("noPlanError")}</p>
+      )}
+    </div>
+  );
+
   if (view === "grid") {
     return (
       <li
@@ -80,6 +133,15 @@ export default function RecipeCard({
             {recipe.nutrition.calories} {t("calories")}
           </p>
         </Link>
+        {isOwner && (
+          <Link
+            href={`/recipes/${recipe.id}/edit`}
+            className="text-xs text-basil hover:underline flex items-center gap-1 px-3"
+          >
+            <Pencil size={12} /> {t("edit")}
+          </Link>
+        )}
+        {addToPlanControl}
       </li>
     );
   }
