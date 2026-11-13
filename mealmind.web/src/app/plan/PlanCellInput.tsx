@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { assignRecipe } from "@/lib/api/plans";
 import { Recipe } from "@/types/recipe";
@@ -11,16 +10,17 @@ export default function PlanCellInput({
   day,
   slot,
   recipes,
+  onDone,
 }: {
   planId: number;
   day: string;
   slot: string;
   recipes: Recipe[];
+  onDone: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const { authFetch } = useAuth();
-  const router = useRouter();
 
   const matches = query.trim()
     ? recipes
@@ -34,7 +34,7 @@ export default function PlanCellInput({
     await assignRecipe(authFetch, planId, day, slot, recipeId);
     setQuery("");
     setOpen(false);
-    router.refresh();
+    onDone();
   }
 
   return (

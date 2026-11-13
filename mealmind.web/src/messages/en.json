@@ -44,7 +44,10 @@
     "chooseRecipe": "Choose a recipe...",
     "breakfast": "Breakfast", "lunch": "Lunch", "dinner": "Dinner", "snack": "Snack",
     "monday": "Monday", "tuesday": "Tuesday", "wednesday": "Wednesday", "thursday": "Thursday",
-    "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday"
+    "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday",
+    "active": "Active",
+    "inactive": "Inactive",
+    "loading": "Loading..."
   },
   "recipeForm": {
     "newTitle": "New Recipe",

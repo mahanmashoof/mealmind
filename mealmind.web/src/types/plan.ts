@@ -9,5 +9,6 @@ export interface WeeklyPlan {
   id: number;
   userId: string;
   weekStartDate: string;
+  isActive: boolean;
   entries: MealPlanEntry[];
 }

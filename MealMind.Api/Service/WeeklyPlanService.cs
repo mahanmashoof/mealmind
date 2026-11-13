@@ -11,11 +11,11 @@ public interface IWeeklyPlanService
 {
     Task<IEnumerable<WeeklyPlan>> GetAllAsync();
     Task<WeeklyPlan?> GetByIdAsync(int id);
-    Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId);
-    Task<PlanOpResult> DeleteAsync(int id, string userId);
     Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, string userId);
     Task<PlanOpResult> RemoveEntryAsync(int planId, int entryId, string userId);
     Task<PrepPlanDraft> GeneratePrepPlanAsync(int planId, string userId);
+    Task<WeeklyPlan> GetOrCreateMineAsync(string userId);
+    Task SetActiveAsync(string userId, bool isActive);
 }
 
 public class WeeklyPlanService : IWeeklyPlanService
@@ -73,25 +73,6 @@ public class WeeklyPlanService : IWeeklyPlanService
     public async Task<WeeklyPlan?> GetByIdAsync(int id) =>
         await _context.WeeklyPlans.Include(p => p.Entries).ThenInclude(e => e.Recipe).FirstOrDefaultAsync(p => p.Id == id);
 
-    public async Task<WeeklyPlan> CreateAsync(DateOnly weekStartDate, string userId)
-    {
-        var plan = new WeeklyPlan { WeekStartDate = weekStartDate, UserId = userId };
-        _context.WeeklyPlans.Add(plan);
-        await _context.SaveChangesAsync();
-        return plan;
-    }
-
-    public async Task<PlanOpResult> DeleteAsync(int id, string userId)
-    {
-        var existing = await _context.WeeklyPlans.FindAsync(id);
-        if (existing is null) return PlanOpResult.NotFound;
-        if (existing.UserId != userId) return PlanOpResult.Forbidden;
-
-        _context.WeeklyPlans.Remove(existing);
-        await _context.SaveChangesAsync();
-        return PlanOpResult.Success;
-    }
-
     public async Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, string userId)
     {
         var plan = await _context.WeeklyPlans
@@ -141,5 +122,30 @@ public class WeeklyPlanService : IWeeklyPlanService
         _context.MealPlanEntries.Remove(entry);
         await _context.SaveChangesAsync();
         return PlanOpResult.Success;
+    }
+
+    public async Task<WeeklyPlan> GetOrCreateMineAsync(string userId)
+    {
+        var plan = await _context.WeeklyPlans
+            .Include(p => p.Entries)
+            .ThenInclude(e => e.Recipe)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+
+        if (plan is null)
+        {
+            plan = new WeeklyPlan { UserId = userId, IsActive = true };
+            _context.WeeklyPlans.Add(plan);
+            await _context.SaveChangesAsync();
+        }
+
+        return plan;
+    }
+
+    public async Task SetActiveAsync(string userId, bool isActive)
+    {
+        var plan = await _context.WeeklyPlans.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (plan is null) return; // nothing to toggle yet — GetOrCreateMineAsync handles first creation
+        plan.IsActive = isActive;
+        await _context.SaveChangesAsync();
     }
 }

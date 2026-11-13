@@ -44,7 +44,10 @@
     "chooseRecipe": "Välj ett recept...",
     "breakfast": "Frukost", "lunch": "Lunch", "dinner": "Middag", "snack": "Mellanmål",
     "monday": "Måndag", "tuesday": "Tisdag", "wednesday": "Onsdag", "thursday": "Torsdag",
-    "friday": "Fredag", "saturday": "Lördag", "sunday": "Söndag"
+    "friday": "Fredag", "saturday": "Lördag", "sunday": "Söndag",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "loading": "Laddar..."
   },
   "recipeForm": {
     "newTitle": "Nytt recept",

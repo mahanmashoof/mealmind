@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Pencil, CalendarPlus, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Recipe } from "@/types/recipe";
-import { assignRecipe, listPlans } from "@/lib/api/plans";
+import { assignRecipe, getMyPlan, listPlans } from "@/lib/api/plans";
 import { useTranslations } from "next-intl";
 
 const DAYS = [
@@ -40,12 +40,7 @@ export default function RecipeCard({
   async function handleAdd() {
     setStatus("saving");
     try {
-      const plans = await listPlans();
-      const myPlan = plans.find((p) => p.userId === userId);
-      if (!myPlan) {
-        setStatus("error");
-        return;
-      }
+      const myPlan = await getMyPlan(authFetch);
       await assignRecipe(authFetch, myPlan.id, day, slot, recipe.id);
       setStatus("done");
       setTimeout(() => {

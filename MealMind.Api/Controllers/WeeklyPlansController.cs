@@ -38,27 +38,6 @@ public class WeeklyPlansController : ControllerBase
         return plan is null ? NotFound() : Ok(plan);
     }
 
-    [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> Create(CreatePlanRequest request)
-    {
-        var plan = await _planService.CreateAsync(request.WeekStartDate, CurrentUserId);
-        return CreatedAtAction(nameof(GetById), new { id = plan.Id }, plan);
-    }
-
-    [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var result = await _planService.DeleteAsync(id, CurrentUserId);
-        return result switch
-        {
-            PlanOpResult.Success => NoContent(),
-            PlanOpResult.Forbidden => Forbid(),
-            _ => NotFound()
-        };
-    }
-
     [HttpPost("{planId}/entries")]
     [Authorize]
     public async Task<IActionResult> AssignRecipe(int planId, AssignRecipeRequest request)
@@ -111,5 +90,23 @@ public class WeeklyPlansController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+    [HttpGet("mine")]
+    [Authorize]
+    public async Task<IActionResult> GetMine()
+    {
+        var plan = await _planService.GetOrCreateMineAsync(CurrentUserId);
+        return Ok(plan);
+    }
+
+    public record SetActiveRequest(bool IsActive);
+
+    [HttpPatch("mine/active")]
+    [Authorize]
+    public async Task<IActionResult> SetActive(SetActiveRequest request)
+    {
+        await _planService.SetActiveAsync(CurrentUserId, request.IsActive);
+        return NoContent();
     }
 }

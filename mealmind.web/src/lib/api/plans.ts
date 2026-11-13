@@ -8,17 +8,6 @@ export function listPlans() {
   ) as Promise<WeeklyPlan[]>;
 }
 
-export function createPlan(authFetch: Fetcher, weekStartDate: string) {
-  return authFetch<WeeklyPlan>("/weeklyplans", {
-    method: "POST",
-    body: JSON.stringify({ weekStartDate }),
-  });
-}
-
-export function deletePlan(authFetch: Fetcher, planId: number) {
-  return authFetch<void>(`/weeklyplans/${planId}`, { method: "DELETE" });
-}
-
 export function assignRecipe(
   authFetch: Fetcher,
   planId: number,
@@ -45,5 +34,16 @@ export function removeEntry(
 export function getPrepPlan(authFetch: Fetcher, planId: number) {
   return authFetch<{ tasks: string[] }>(`/weeklyplans/${planId}/prep-plan`, {
     method: "GET",
+  });
+}
+
+export function getMyPlan(authFetch: Fetcher) {
+  return authFetch<WeeklyPlan>("/weeklyplans/mine");
+}
+
+export function setPlanActive(authFetch: Fetcher, isActive: boolean) {
+  return authFetch<void>("/weeklyplans/mine/active", {
+    method: "PATCH",
+    body: JSON.stringify({ isActive }),
   });
 }

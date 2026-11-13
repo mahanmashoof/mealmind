@@ -44,7 +44,10 @@
     "chooseRecipe": "Escolha uma receita...",
     "breakfast": "Café da manhã", "lunch": "Almoço", "dinner": "Jantar", "snack": "Lanche",
     "monday": "Segunda", "tuesday": "Terça", "wednesday": "Quarta", "thursday": "Quinta",
-    "friday": "Sexta", "saturday": "Sábado", "sunday": "Domingo"
+    "friday": "Sexta", "saturday": "Sábado", "sunday": "Domingo",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "loading": "Carregando..."
   },
   "recipeForm": {
     "newTitle": "Nova Receita",

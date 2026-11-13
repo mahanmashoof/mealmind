@@ -1,41 +1,31 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { useState } from "react";
 import { removeEntry } from "@/lib/api/plans";
 
 export default function RemoveEntryButton({
   planId,
   entryId,
+  onDone,
 }: {
   planId: number;
   entryId: number;
+  onDone: () => void;
 }) {
   const { authFetch } = useAuth();
-  const router = useRouter();
-  const [error, setError] = useState("");
 
   async function remove() {
-    try {
-      removeEntry(authFetch, planId, entryId);
-      router.refresh();
-    } catch {
-      setError("Couldn't remove this entry. It may not be yours to delete.");
-    }
+    await removeEntry(authFetch, planId, entryId);
+    onDone();
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <button
-        onClick={remove}
-        className="text-xs text-ink/40 hover:text-basil ml-2"
-        aria-label="Remove"
-      >
-        ✕
-      </button>
-
-      {error && <p className="text-red-600 text-xs">{error}</p>}
-    </div>
+    <button
+      onClick={remove}
+      className="text-xs text-ink/40 hover:text-basil ml-2"
+      aria-label="Remove"
+    >
+      ✕
+    </button>
   );
 }
