@@ -167,33 +167,6 @@ namespace MealMind.Api.Migrations
                     b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("MealMind.Api.Models.Reminder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Reminders");
-                });
-
             modelBuilder.Entity("MealMind.Api.Models.WeeklyPlan", b =>
                 {
                     b.Property<int>("Id")

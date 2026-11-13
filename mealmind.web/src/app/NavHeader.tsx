@@ -60,15 +60,17 @@ export default function NavHeader() {
               <ImageUp size={16} /> {t("importPhoto")}
             </Link>
           )}
-          <Link href="/plan" className="flex items-center gap-1">
-            <CalendarDays size={16} /> {t("plan")}
-          </Link>
-          <Link href="/recipes/ai-generate" className="flex items-center gap-1">
-            <Sparkles size={16} /> {t("askAi")}
-          </Link>
           {token && (
-            <Link href="/reminders" className="flex items-center gap-1">
-              <Bell size={16} /> {t("reminders")}
+            <Link href="/plan" className="flex items-center gap-1">
+              <CalendarDays size={16} /> {t("plan")}
+            </Link>
+          )}
+          {token && (
+            <Link
+              href="/recipes/ai-generate"
+              className="flex items-center gap-1"
+            >
+              <Sparkles size={16} /> {t("askAi")}
             </Link>
           )}
           <button onClick={toggle} aria-label="Toggle dark mode">
@@ -128,27 +130,22 @@ export default function NavHeader() {
               <ImageUp size={16} /> {t("importPhoto")}
             </Link>
           )}
-          <Link
-            href="/plan"
-            onClick={closeMenu}
-            className="flex items-center gap-2"
-          >
-            <CalendarDays size={16} /> {t("plan")}
-          </Link>
-          <Link
-            href="/recipes/ai-generate"
-            onClick={closeMenu}
-            className="flex items-center gap-2"
-          >
-            <Sparkles size={16} /> {t("askAi")}
-          </Link>
           {token && (
             <Link
-              href="/reminders"
+              href="/plan"
               onClick={closeMenu}
               className="flex items-center gap-2"
             >
-              <Bell size={16} /> {t("reminders")}
+              <CalendarDays size={16} /> {t("plan")}
+            </Link>
+          )}
+          {token && (
+            <Link
+              href="/recipes/ai-generate"
+              onClick={closeMenu}
+              className="flex items-center gap-2"
+            >
+              <Sparkles size={16} /> {t("askAi")}
             </Link>
           )}
           <button onClick={toggle} className="flex items-center gap-2">
