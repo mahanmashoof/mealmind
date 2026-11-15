@@ -16,6 +16,7 @@ public interface IWeeklyPlanService
     Task<PrepPlanDraft> GeneratePrepPlanAsync(int planId, string userId);
     Task<WeeklyPlan> GetOrCreateMineAsync(string userId);
     Task SetActiveAsync(string userId, bool isActive);
+    Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, int portions, string userId);
 }
 
 public class WeeklyPlanService : IWeeklyPlanService
@@ -147,5 +148,43 @@ public class WeeklyPlanService : IWeeklyPlanService
         if (plan is null) return; // nothing to toggle yet — GetOrCreateMineAsync handles first creation
         plan.IsActive = isActive;
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<MealPlanEntry> AssignRecipeAsync(int planId, DayOfWeek day, MealSlot slot, int recipeId, int portions, string userId)
+    {
+        var plan = await _context.WeeklyPlans
+            .Include(p => p.Entries)
+            .FirstOrDefaultAsync(p => p.Id == planId)
+            ?? throw new KeyNotFoundException("Plan not found");
+
+        if (plan.UserId != userId)
+            throw new UnauthorizedAccessException("Not your plan");
+
+        var recipeExists = await _context.Recipes.AnyAsync(r => r.Id == recipeId);
+        if (!recipeExists)
+            throw new KeyNotFoundException("Recipe not found");
+
+        var existingEntry = plan.Entries.FirstOrDefault(e => e.Day == day && e.Slot == slot);
+
+        if (existingEntry is not null)
+        {
+            existingEntry.RecipeId = recipeId;
+            existingEntry.Portions = portions;
+        }
+        else
+        {
+            existingEntry = new MealPlanEntry
+            {
+                WeeklyPlanId = planId,
+                Day = day,
+                Slot = slot,
+                RecipeId = recipeId,
+                Portions = portions
+            };
+            _context.MealPlanEntries.Add(existingEntry);
+        }
+
+        await _context.SaveChangesAsync();
+        return existingEntry;
     }
 }

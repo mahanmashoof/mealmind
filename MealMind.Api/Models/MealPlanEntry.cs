@@ -14,4 +14,5 @@ public class MealPlanEntry
     public MealSlot Slot { get; set; }
     public int RecipeId { get; set; }
     public Recipe? Recipe { get; set; }
+    public int Portions { get; set; } = 4;
 }

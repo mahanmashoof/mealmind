@@ -114,6 +114,9 @@ namespace MealMind.Api.Migrations
                     b.Property<int>("Day")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Portions")
+                        .HasColumnType("integer");
+
                     b.Property<int>("RecipeId")
                         .HasColumnType("integer");
 

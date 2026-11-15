@@ -168,8 +168,8 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
                       <td key={dayValue} className="px-1 py-1 align-top">
                         {entry ? (
                           <div className="flex items-center justify-between bg-surface border border-stone rounded px-1 py-1">
-                            <span className="truncate">
-                              {entry.recipe?.name}
+                            <span className="text-sm truncate">
+                              {entry.recipe?.name} ({entry.portions})
                             </span>
                             <RemoveEntryButton
                               planId={plan.id}

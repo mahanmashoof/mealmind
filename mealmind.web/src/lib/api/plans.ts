@@ -14,10 +14,11 @@ export function assignRecipe(
   day: string,
   slot: string,
   recipeId: number,
+  portions: number,
 ) {
   return authFetch<void>(`/weeklyplans/${planId}/entries`, {
     method: "POST",
-    body: JSON.stringify({ day, slot, recipeId }),
+    body: JSON.stringify({ day, slot, recipeId, portions }),
   });
 }
 

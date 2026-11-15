@@ -7,7 +7,7 @@ using MealMind.Api.Models;
 namespace MealMind.Api.Controllers;
 
 public record CreatePlanRequest(DateOnly WeekStartDate);
-public record AssignRecipeRequest(DayOfWeek Day, MealSlot Slot, int RecipeId);
+public record AssignRecipeRequest(DayOfWeek Day, MealSlot Slot, int RecipeId, int Portions);
 
 [ApiController]
 [Route("api/[controller]")]
@@ -38,23 +38,18 @@ public class WeeklyPlansController : ControllerBase
         return plan is null ? NotFound() : Ok(plan);
     }
 
+    public record AssignRecipeRequest(DayOfWeek Day, MealSlot Slot, int RecipeId, int Portions);
+
     [HttpPost("{planId}/entries")]
-    [Authorize]
     public async Task<IActionResult> AssignRecipe(int planId, AssignRecipeRequest request)
     {
         try
         {
-            var entry = await _planService.AssignRecipeAsync(planId, request.Day, request.Slot, request.RecipeId, CurrentUserId);
+            var entry = await _planService.AssignRecipeAsync(planId, request.Day, request.Slot, request.RecipeId, request.Portions, CurrentUserId);
             return Ok(entry);
         }
-        catch (UnauthorizedAccessException)
-        {
-            return Forbid();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
-        }
+        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException) { return NotFound(); }
     }
 
     [HttpDelete("{planId}/entries/{entryId}")]
