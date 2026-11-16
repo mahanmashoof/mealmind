@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { Pencil, CalendarPlus, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import { Recipe } from "@/types/recipe";
-import { assignRecipe, getMyPlan, listPlans } from "@/lib/api/plans";
 import { useTranslations } from "next-intl";
+import { getMyPlan, assignRecipe } from "@/lib/api/plans";
+import { Recipe } from "@/types/recipe";
 
 const DAYS = [
   "Monday",
@@ -27,25 +27,27 @@ export default function RecipeCard({
   view?: "list" | "grid";
 }) {
   const { userId, authFetch } = useAuth();
+  const t = useTranslations("home");
   const [adding, setAdding] = useState(false);
   const [day, setDay] = useState(DAYS[0]);
   const [slot, setSlot] = useState(SLOTS[0]);
+  const [portions, setPortions] = useState(4);
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">(
     "idle",
   );
 
   const isOwner = userId === recipe.userId;
-  const t = useTranslations("home");
 
   async function handleAdd() {
     setStatus("saving");
     try {
       const myPlan = await getMyPlan(authFetch);
-      await assignRecipe(authFetch, myPlan.id, day, slot, recipe.id);
+      await assignRecipe(authFetch, myPlan.id, day, slot, recipe.id, portions);
       setStatus("done");
       setTimeout(() => {
         setAdding(false);
         setStatus("idle");
+        setPortions(4);
       }, 1200);
     } catch {
       setStatus("error");
@@ -86,6 +88,19 @@ export default function RecipeCard({
               </option>
             ))}
           </select>
+          <button
+            onClick={() => setPortions(Math.max(1, portions - 1))}
+            className="text-basil px-1"
+          >
+            −
+          </button>
+          <span className="text-xs font-mono">{portions}</span>
+          <button
+            onClick={() => setPortions(portions + 1)}
+            className="text-basil px-1"
+          >
+            +
+          </button>
           <button
             onClick={handleAdd}
             disabled={status === "saving"}
@@ -154,7 +169,7 @@ export default function RecipeCard({
             {recipe.name}
           </p>
           <p className="font-mono text-xs text-basil mt-1">
-            {recipe.nutrition.calories} cal · {recipe.portions} {t("portions")}
+            {recipe.nutrition.calories} {t("calories")}
           </p>
         </Link>
 
@@ -176,58 +191,7 @@ export default function RecipeCard({
         />
       )}
 
-      {userId && (
-        <div className="absolute bottom-3 right-3">
-          {!adding ? (
-            <button
-              onClick={() => setAdding(true)}
-              className="text-xs text-basil flex items-center gap-1"
-              aria-label="Add to plan"
-            >
-              <CalendarPlus size={16} />
-            </button>
-          ) : (
-            <div className="flex items-center gap-1 bg-surface border border-stone rounded px-2 py-1 animate-fade-in">
-              <select
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                className="text-xs bg-transparent"
-              >
-                {DAYS.map((d) => (
-                  <option key={d} value={d}>
-                    {d.slice(0, 3)}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={slot}
-                onChange={(e) => setSlot(e.target.value)}
-                className="text-xs bg-transparent"
-              >
-                {SLOTS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={handleAdd}
-                disabled={status === "saving"}
-                aria-label="Confirm"
-              >
-                {status === "done" ? (
-                  <Check size={14} className="text-basil" />
-                ) : (
-                  "✓"
-                )}
-              </button>
-            </div>
-          )}
-          {status === "error" && (
-            <p className="text-xs text-red-600 mt-1">{t("emptyTitle ")}</p>
-          )}
-        </div>
-      )}
+      {addToPlanControl}
     </li>
   );
 }
