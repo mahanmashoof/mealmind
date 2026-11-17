@@ -106,11 +106,14 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
                 <span className="flex items-center gap-1 text-xs text-ink/60 w-20 shrink-0">
                   {SLOT_ICONS[slotValue]} {t(slotKey)}
                 </span>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {entry ? (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm truncate">
+                    <div className="flex items-center gap-1 max-w-full">
+                      <span className="text-sm truncate min-w-0 flex-1">
                         {entry.recipe?.name}
+                      </span>
+                      <span className="text-xs text-ink/50 shrink-0">
+                        ({entry.portions})
                       </span>
                       <RemoveEntryButton
                         planId={plan.id}
@@ -136,14 +139,14 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
 
       {/* DESKTOP: full 4x7 table */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="border-collapse text-xs min-w-160 w-full">
+        <table className="border-collapse text-xs min-w-160 w-full table-fixed">
           <thead>
             <tr>
-              <th className="sticky left-0 bg-parchment"></th>
+              <th className="sticky left-0 bg-parchment w-20"></th>
               {DAY_KEYS.map((dayKey) => (
                 <th
                   key={dayKey}
-                  className="font-display uppercase text-ink/70 text-center py-1 px-1 min-w-20"
+                  className="font-display uppercase text-ink/70 text-center py-1 px-1 w-25"
                 >
                   {t(dayKey).slice(0, 3)}
                 </th>
@@ -155,7 +158,7 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
               const slotValue = SLOT_VALUES[si];
               return (
                 <tr key={slotKey} className="border-t border-stone">
-                  <td className="sticky left-0 bg-parchment pr-2 py-2 text-ink/70 whitespace-nowrap">
+                  <td className="sticky left-0 bg-parchment pr-2 py-2 text-ink/70 whitespace-nowrap w-20">
                     <span className="flex items-center gap-1">
                       {SLOT_ICONS[slotValue]} {t(slotKey)}
                     </span>
@@ -165,11 +168,14 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
                       (e) => e.day === dayValue && e.slot === slotValue,
                     );
                     return (
-                      <td key={dayValue} className="px-1 py-1 align-top">
+                      <td key={dayValue} className="px-1 py-1 align-top w-25">
                         {entry ? (
-                          <div className="flex items-center justify-between bg-surface border border-stone rounded px-1 py-1">
-                            <span className="text-sm truncate">
-                              {entry.recipe?.name} ({entry.portions})
+                          <div className="flex items-center gap-1 bg-surface border border-stone rounded px-1 py-1 max-w-full">
+                            <span className="text-sm truncate min-w-0 flex-1">
+                              {entry.recipe?.name}
+                            </span>
+                            <span className="text-xs text-ink/50 shrink-0">
+                              ({entry.portions})
                             </span>
                             <RemoveEntryButton
                               planId={plan.id}

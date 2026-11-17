@@ -49,7 +49,7 @@ export default function PlanCellInput({
   if (picked) {
     return (
       <div className="flex items-center gap-1 bg-surface border border-stone rounded px-1 py-1 flex-wrap">
-        <span className="text-xs truncate max-w-20">{picked.name}</span>
+        <span className="text-xs truncate flex-1 min-w-0">{picked.name}</span>
         <button
           onClick={() => setPortions(Math.max(1, portions - 1))}
           className="text-basil px-1"
@@ -89,6 +89,7 @@ export default function PlanCellInput({
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder="+"
         className="w-full text-xs border border-stone rounded px-1 py-1 bg-surface"
+        maxLength={40}
       />
       {open && matches.length > 0 && (
         <ul className="absolute z-10 left-0 right-0 bg-surface border border-stone rounded shadow-sm mt-1 max-h-40 overflow-y-auto">
@@ -97,7 +98,7 @@ export default function PlanCellInput({
               <button
                 type="button"
                 onMouseDown={() => pick(r)}
-                className="w-full text-left text-xs px-2 py-1 hover:bg-basil hover:text-parchment"
+                className="w-full text-left text-xs px-2 py-1 hover:bg-basil hover:text-parchment truncate block"
               >
                 {r.name}
               </button>
