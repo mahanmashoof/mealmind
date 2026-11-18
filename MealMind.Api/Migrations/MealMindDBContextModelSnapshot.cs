@@ -170,6 +170,58 @@ namespace MealMind.Api.Migrations
                     b.ToTable("Recipes");
                 });
 
+            modelBuilder.Entity("MealMind.Api.Models.ShoppingList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShoppingLists");
+                });
+
+            modelBuilder.Entity("MealMind.Api.Models.ShoppingListItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("ShoppingListId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShoppingListId");
+
+                    b.ToTable("ShoppingListItems");
+                });
+
             modelBuilder.Entity("MealMind.Api.Models.WeeklyPlan", b =>
                 {
                     b.Property<int>("Id")
@@ -408,6 +460,17 @@ namespace MealMind.Api.Migrations
                     b.Navigation("Nutrition");
                 });
 
+            modelBuilder.Entity("MealMind.Api.Models.ShoppingListItem", b =>
+                {
+                    b.HasOne("MealMind.Api.Models.ShoppingList", "ShoppingList")
+                        .WithMany("Items")
+                        .HasForeignKey("ShoppingListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShoppingList");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -457,6 +520,11 @@ namespace MealMind.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MealMind.Api.Models.ShoppingList", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("MealMind.Api.Models.WeeklyPlan", b =>

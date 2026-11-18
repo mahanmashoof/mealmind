@@ -6,7 +6,8 @@
     "reminders": "Påminnelser",
     "logIn": "Logga in",
     "logOut": "Logga ut",
-    "importPhoto": "Importera från foto"
+    "importPhoto": "Importera från foto",
+    "shoppingList": "Inköpslista"
   },
   "home": {
     "title": "Recept",
@@ -120,6 +121,15 @@
     "title": "Påminnelser",
     "empty": "Inga påminnelser än — de dyker upp kvällen innan en planerad måltid.",
     "markRead": "Markera som läst"
+  },
+  "shoppingList": {
+    "title": "Inköpslista",
+    "loading": "Laddar...",
+    "empty": "Ingen inköpslista än — skapa en från din veckoplan.",
+    "generateShoppingList": "Skapa inköpslista",
+    "confirmGenerate": "Detta ersätter din nuvarande inköpslista.",
+    "yes": "Ja",
+    "cancel": "Avbryt",
+    "goToPlan": "Ga till veckans plan"
   }
-
 }

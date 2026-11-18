@@ -29,9 +29,16 @@ namespace MealMind.Api.Data
             .HasMany(p => p.Entries)
             .WithOne(e => e.WeeklyPlan)
             .HasForeignKey(e => e.WeeklyPlanId);
+
+            modelBuilder.Entity<ShoppingList>()
+            .HasMany(s => s.Items)
+            .WithOne(i => i.ShoppingList)
+            .HasForeignKey(i => i.ShoppingListId);
         }
         public DbSet<WeeklyPlan> WeeklyPlans => Set<WeeklyPlan>();
         public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
         public DbSet<AllowedUser> AllowedUsers => Set<AllowedUser>();
+        public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
+        public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
     }
 }

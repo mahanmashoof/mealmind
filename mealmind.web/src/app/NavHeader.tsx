@@ -14,6 +14,7 @@ import {
   X,
   CirclePlus,
   ImageUp,
+  ShoppingCart,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
@@ -71,6 +72,11 @@ export default function NavHeader() {
               className="flex items-center gap-1"
             >
               <Sparkles size={16} /> {t("askAi")}
+            </Link>
+          )}
+          {token && (
+            <Link href="/shoppinglist" className="flex items-center gap-1">
+              <ShoppingCart size={16} /> {t("shoppingList")}
             </Link>
           )}
           <button onClick={toggle} aria-label="Toggle dark mode">
@@ -146,6 +152,11 @@ export default function NavHeader() {
               className="flex items-center gap-2"
             >
               <Sparkles size={16} /> {t("askAi")}
+            </Link>
+          )}
+          {token && (
+            <Link href="/shoppinglist" className="flex items-center gap-1">
+              <ShoppingCart size={16} /> {t("shoppingList")}
             </Link>
           )}
           <button onClick={toggle} className="flex items-center gap-2">

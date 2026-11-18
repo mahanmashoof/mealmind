@@ -6,7 +6,8 @@
     "reminders": "Lembretes",
     "logIn": "Entrar",
     "logOut": "Sair",
-    "importPhoto": "Importar de foto"
+    "importPhoto": "Importar de foto",
+    "shoppingList": "Lista de Compras"
   },
   "home": {
     "title": "Receitas",
@@ -120,5 +121,15 @@
     "title": "Lembretes",
     "empty": "Ainda sem lembretes — eles aparecerão aqui na noite anterior a uma refeição planejada.",
     "markRead": "Marcar como lido"
+  },
+  "shoppingList": {
+    "title": "Lista de Compras",
+    "loading": "Carregando...",
+    "empty": "Ainda sem lista de compras — gere uma a partir do seu plano semanal.",
+    "generateShoppingList": "Gerar lista de compras",
+    "confirmGenerate": "Isso substituirá sua lista de compras atual.",
+    "yes": "Sim",
+    "cancel": "Cancelar",
+    "goToPlan": "Ir para o plano semanal"
   }
 }

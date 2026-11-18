@@ -10,6 +10,7 @@ import RemoveEntryButton from "./RemoveEntryButton";
 import { Recipe } from "@/types/recipe";
 import { WeeklyPlan } from "@/types/plan";
 import { Coffee, Sun, Moon, Cookie } from "lucide-react";
+import GenerateShoppingListButton from "./GenerateShoppingListButton";
 
 const DAY_KEYS = [
   "monday",
@@ -201,6 +202,7 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
           </tbody>
         </table>
       </div>
+      <GenerateShoppingListButton />
     </main>
   );
 }

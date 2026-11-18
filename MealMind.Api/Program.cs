@@ -94,6 +94,8 @@ builder.Services.Configure<HostOptions>(options =>
     options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
 });
 
+builder.Services.AddScoped<IShoppingListService, ShoppingListService>();
+
 
 var firebaseJson = builder.Configuration["Firebase:ServiceAccountJson"]!;
 

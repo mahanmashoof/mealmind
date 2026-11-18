@@ -6,7 +6,8 @@
     "reminders": "Reminders",
     "logIn": "Log in",
     "logOut": "Log out",
-    "importPhoto": "Import from photo"
+    "importPhoto": "Import from photo",
+    "shoppingList": "Shopping List"
   },
   "home": {
     "title": "Recipes",
@@ -120,5 +121,15 @@
     "title": "Reminders",
     "empty": "No reminders yet — they'll show up here the night before a planned meal.",
     "markRead": "Mark read"
+  },
+  "shoppingList": {
+    "title": "Shopping List",
+    "loading": "Loading...",
+    "empty": "No shopping list yet — generate one from your weekly plan.",
+    "generateShoppingList": "Generate shopping list",
+    "confirmGenerate": "This replaces your current shopping list.",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "goToPlan": "Go to weekly plan"
   }
 }
