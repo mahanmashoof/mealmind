@@ -11,6 +11,7 @@ import { Recipe } from "@/types/recipe";
 import { WeeklyPlan } from "@/types/plan";
 import { Coffee, Sun, Moon, Cookie } from "lucide-react";
 import GenerateShoppingListButton from "./GenerateShoppingListButton";
+import AssignedEntryRow from "./AssignedEntryRow";
 
 const DAY_KEYS = [
   "monday",
@@ -108,29 +109,23 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
                   {SLOT_ICONS[slotValue]} {t(slotKey)}
                 </span>
                 <div className="flex-1 min-w-0">
-                  {entry ? (
-                    <div className="flex items-center gap-1 max-w-full">
-                      <span className="text-sm truncate min-w-0 flex-1">
-                        {entry.recipe?.name}
-                      </span>
-                      <span className="text-xs text-ink/50 shrink-0">
-                        ({entry.portions})
-                      </span>
-                      <RemoveEntryButton
+                  <div className="flex-1 min-w-0">
+                    {entry ? (
+                      <AssignedEntryRow
                         planId={plan.id}
-                        entryId={entry.id}
+                        entry={entry}
                         onDone={refresh}
                       />
-                    </div>
-                  ) : (
-                    <PlanCellInput
-                      planId={plan.id}
-                      day={dayValue}
-                      slot={slotValue}
-                      recipes={recipes}
-                      onDone={refresh}
-                    />
-                  )}
+                    ) : (
+                      <PlanCellInput
+                        planId={plan.id}
+                        day={dayValue}
+                        slot={slotValue}
+                        recipes={recipes}
+                        onDone={refresh}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -171,19 +166,11 @@ export default function PlanBoard({ recipes }: { recipes: Recipe[] }) {
                     return (
                       <td key={dayValue} className="px-1 py-1 align-top w-25">
                         {entry ? (
-                          <div className="flex items-center gap-1 bg-surface border border-stone rounded px-1 py-1 max-w-full">
-                            <span className="text-sm truncate min-w-0 flex-1">
-                              {entry.recipe?.name}
-                            </span>
-                            <span className="text-xs text-ink/50 shrink-0">
-                              ({entry.portions})
-                            </span>
-                            <RemoveEntryButton
-                              planId={plan.id}
-                              entryId={entry.id}
-                              onDone={refresh}
-                            />
-                          </div>
+                          <AssignedEntryRow
+                            planId={plan.id}
+                            entry={entry}
+                            onDone={refresh}
+                          />
                         ) : (
                           <PlanCellInput
                             planId={plan.id}
