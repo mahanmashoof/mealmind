@@ -7,7 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { decodeToken } from "./jwt";
+import { decodeToken, isExpired } from "./jwt";
 import { useRouter } from "next/navigation";
 import { ApiError, apiFetch } from "./api";
 
@@ -31,27 +31,45 @@ export function AuthProvider({
   initialToken?: string | null;
 }) {
   const initialDecoded = initialToken ? decodeToken(initialToken) : null;
-  const [token, setToken] = useState<string | null>(initialToken);
+  const initialValid = initialToken && !isExpired(initialDecoded);
+
+  const [token, setToken] = useState<string | null>(
+    initialValid ? initialToken : null,
+  );
   const [email, setEmail] = useState<string | null>(
-    initialDecoded?.email ?? null,
+    initialValid ? (initialDecoded?.email ?? null) : null,
   );
   const [userId, setUserId] = useState<string | null>(
-    initialDecoded?.sub ?? null,
+    initialValid ? (initialDecoded?.sub ?? null) : null,
   );
-  const [initialized, setInitialized] = useState(initialToken !== undefined);
+  const [initialized, setInitialized] = useState(false);
   const router = useRouter();
 
+  function clearStorage() {
+    localStorage.removeItem("mealmind_token");
+    document.cookie = "mealmind_token=; path=/; max-age=0";
+  }
+
   useEffect(() => {
-    // Only needed as a fallback if no cookie was present but localStorage has a stale one
-    if (!initialToken) {
-      const stored = localStorage.getItem("mealmind_token");
-      if (stored) {
+    // The cookie-seeded initial state already failed validity above — make sure storage reflects that too
+    if (initialToken && !initialValid) {
+      clearStorage();
+    }
+
+    // Separately, localStorage might hold a different/newer token than the cookie did
+    const stored = localStorage.getItem("mealmind_token");
+    if (stored) {
+      const decoded = decodeToken(stored);
+      if (isExpired(decoded)) {
+        clearStorage();
+      } else if (!initialValid) {
+        // cookie was empty/invalid but localStorage has a good token — use it
         setToken(stored);
-        const decoded = decodeToken(stored);
         setEmail(decoded?.email ?? null);
         setUserId(decoded?.sub ?? null);
       }
     }
+
     setInitialized(true);
   }, []);
 
@@ -65,23 +83,23 @@ export function AuthProvider({
   };
 
   const logout = () => {
-    localStorage.removeItem("mealmind_token");
-    document.cookie = "mealmind_token=; path=/; max-age=0";
+    clearStorage();
     setToken(null);
     setEmail(null);
     setUserId(null);
     router.push("/");
   };
 
+  // ...authFetch unchanged...
+
   async function authFetch<T>(path: string, options?: RequestInit): Promise<T> {
     try {
       return await apiFetch<T>(path, options, token);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
-        logout();
-        router.push("/");
+        logout(); // logout() already redirects to "/" — no separate router.push("/login") needed
       }
-      throw err; // still lets the calling component show its own message for non-401 errors
+      throw err;
     }
   }
 

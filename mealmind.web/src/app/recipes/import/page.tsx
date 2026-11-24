@@ -41,7 +41,6 @@ export default function ImportRecipePage() {
 
       if (res.status === 401) {
         logout();
-        router.push("/login");
         return;
       }
       if (!res.ok) throw new Error();

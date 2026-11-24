@@ -15,3 +15,8 @@ export function decodeToken(token: string): DecodedToken | null {
     return null;
   }
 }
+
+export function isExpired(decoded: DecodedToken | null): boolean {
+  if (!decoded?.exp) return true;
+  return decoded.exp * 1000 < Date.now(); // exp is in seconds, Date.now() in ms
+}
